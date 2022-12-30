@@ -1,0 +1,14 @@
+{
+  "users": [
+  {
+    "uid": "9177a95d-6f83-478d-968d-73be5a2df24d",
+    "firstName": "Igor",
+    "lastName": "Hakcolt",
+    "email": "test@gamil.com",
+    "gender": "Male",
+    "password": "$2a$10$KWoJ5uhMyrn3yTHY9NHQ2eHOhcPPszuICQKOHw/zt7Zc/A/iiLUP.",
+    "createdAt": "1856-06-10T18:30:51.876-05:00",
+    "verified": true
+  }
+]
+}
