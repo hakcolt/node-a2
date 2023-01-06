@@ -1,10 +1,10 @@
 import { Gender } from "../../../../domain/user/Gender.enum"
 import { User } from "../../../../domain/user/User"
 import { Result } from "../../../shared/useCases/Result"
-import passwordUtil from "../../../shared/utils/PasswordUtil"
+import validation from "../../../shared/utils/Validation"
 
 
-type IUserDTO = {
+export type IUserDTO = {
   firstName: string,
   lastName: string,
   email: string,
@@ -23,47 +23,43 @@ export class UserDTO {
     const userDto = new UserDTO()
     userDto.firstName = data.firstName
     userDto.lastName = data.lastName
-    userDto.email = data.email
-    userDto.gender = data.gender
+    userDto.email = data.email?.toLowerCase()
+    userDto.gender = data.gender?.toLowerCase()
     userDto.password = data.password
     return userDto
   }
 
-  validate(result: Result<any>): boolean {
-    const attributes = [ "firstName", "lastName", "email", "gender", "password" ]
-    const missingAttributes: string[] = []
+  validate(result: Result): boolean {
+    const missingAttributes = validation.validateObject(this, ["firstName:string", "lastName:string", "email:string", "gender:string", "password:string"])
 
-    for (const attribute in attributes) {
-      const userAttribute = this[ attribute ]
-      if (!userAttribute || typeof userAttribute === "string") {
-        missingAttributes.push(attribute)
-      }
-    }
-
-    if(!missingAttributes.length) {
-      result.setError(new Error("Missing attributes: " + missingAttributes), 400)
+    if (missingAttributes) {
+      result.setError("Missing attributes: " + missingAttributes, 400)
       return false
     }
 
-    const genders = [ Gender.MALE, Gender.FEMALE, Gender.OTHER ]
-    if (!genders.find(gender => gender === this.gender)) {
-      result.setError(new Error("Invalid gender"), 400)
+    if (this.password.length < 6) {
+      result.setError("Invalid password", 400)
       return false
     }
 
-    const validateEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/
-    console.log(validateEmail.test(this.email))
+    const genders = [Gender.MALE, Gender.FEMALE, Gender.OTHER]
+    if (!genders.find(gender => gender == this.gender)) {
+      result.setError("Invalid gender", 400)
+      return false
+    }
+
+    const validateEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\])|(([a-zA-Z\-\d]+\.)+[a-zA-Z]{2,}))$/
     if (!validateEmail.test(this.email)) {
-      result.setError(new Error("Invalid email"), 400)
+      result.setError("Invalid email", 400)
       return false
     }
-
     return true
   }
 
   toDomain(): User {
     const user = new User()
     user.uid = null
+    user.token = null
     user.firstName = this.firstName
     user.lastName = this.lastName
     user.email = this.email
@@ -74,7 +70,5 @@ export class UserDTO {
     return user
   }
 
-  async encryptPassword() {
-    this.password = await passwordUtil.encrypt(this.password)
-  }
+
 }

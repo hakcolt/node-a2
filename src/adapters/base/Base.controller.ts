@@ -1,17 +1,40 @@
-import { Response, Router } from "express"
-import { Result } from "../../application/shared/useCases/Result"
-import { settings } from "../../application/shared/settings/AppSettings"
+import { NextFunction, Response, Router } from "express"
+import { Result, ResultData } from "../../application/shared/useCases/Result"
 
 
 export abstract class BaseController {
   abstract initializeRoutes(router: Router): void
 
-  handleResult(res: Response, result: Result<any>) {
-    const error = result.error as Error
-    if (error) {
-      if (settings.Server.Mode === settings.Mode.Development) console.log(error.message, "\n", error.stack)
-      result.error = error.message
+  getResultToResponse(res: Response, result: Result): Result {
+    if (result.isSucess && result instanceof ResultData && result.cookie) {
+      const cookie = result.cookie
+      res.cookie(cookie.name, cookie.value)
+
+      const tempResult = new ResultData()
+      tempResult.setMessage(result.message, result.statusCode)
+      tempResult.data = result.data
+      result = tempResult
     }
-    res.status(result.statusCode).json(result)
+    return result
+  }
+
+  async handleResult(res: Response, next: NextFunction, useCase: Promise<Result>) {
+    try {
+      let result = await useCase
+
+      const resultUpdated = this.getResultToResponse(res, result)
+      res.status(resultUpdated.statusCode).json(resultUpdated)
+    } catch (e) { next(e) }
+  }
+
+  async handleMiddleware(res: Response, next: NextFunction, useCase: Promise<Result>) {
+    try {
+      let result = await useCase
+
+      if (result.isSucess) {
+        const resultUpdated = this.getResultToResponse(res, result)
+        res.status(resultUpdated.statusCode).json(resultUpdated)
+      } else next()
+    } catch (e) { next(e) }
   }
 }

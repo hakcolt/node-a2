@@ -1,5 +1,5 @@
 import { Result } from "./Result"
 
-export interface IBaseUseCase<T> {
-  execute(data): Promise<T>
+export interface IBaseUseCase {
+  execute(data: any): Promise<Result>
 }

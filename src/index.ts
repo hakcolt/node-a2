@@ -1,7 +1,8 @@
 import { BaseController } from "./adapters/base/Base.controller"
-import userController from "./adapters/controllers/User.controller"
 import { AppWrapper } from "./infrastructure/app/AppWrapper"
 import { HttpServer } from "./infrastructure/app/server/HttpServer"
+
+import userController from "./adapters/controllers/User.controller"
 
 const controllers: BaseController[] = [userController]
 
@@ -11,10 +12,10 @@ server.start()
 
 /* TODO:
  process.on("uncaughtException", (error: NodeJS.UncaughtExceptionListener) => {
-  errorHandlerMiddleware.manageNodeException("UncaughtException", error);
+  console.log("uncaughtException")
 });
 
 process.on("unhandledRejection", (reason: NodeJS.UnhandledRejectionListener) => {
-  errorHandlerMiddleware.manageNodeException("UnhandledRejection", reason);
+  console.log("unhandledRejection")
 });
 */

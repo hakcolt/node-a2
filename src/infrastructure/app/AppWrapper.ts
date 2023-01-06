@@ -1,7 +1,11 @@
 import express, { Express, Router, json } from "express"
-import { BaseController } from "../../adapters/base/Base.controller"
 import helmet from "helmet"
-import { settings } from "../../application/shared/settings/AppSettings"
+import cookieParser from "cookie-parser"
+import { BaseController } from "../../adapters/base/Base.controller"
+import { AppSettings } from "../../application/shared/settings/AppSettings"
+import configs from "../config"
+import { errorHandler } from "../middlewares/error"
+import { notFoundMiddleware } from "../middlewares/404"
 
 export class AppWrapper {
   app: Express
@@ -11,23 +15,24 @@ export class AppWrapper {
     this.app.set("trust proxy", true)
     this.loadMiddleware()
 
+    AppSettings.init(configs)
+
     if (controllers && controllers.length > 0) this.loadControllers(controllers)
   }
 
   loadMiddleware() {
     this.app
     .use(helmet())
+    .use(cookieParser())
     .use(json())
   }
 
   loadControllers(controllers: BaseController[]) {
-    controllers.forEach((controller) => {
-      const router = Router()
-      controller.initializeRoutes(router)
-      this.app.use(settings.Server.Root, router)
-    })
-
-    // TODO: this.app.use()
+    const router = Router()
+    controllers.forEach((controller) => controller.initializeRoutes(router))
+    router.use(notFoundMiddleware)
+    router.use(errorHandler)
+    this.app.use(AppSettings.SERVER_ROOT, router)
   }
 
   async initializeServices(): Promise<void> {

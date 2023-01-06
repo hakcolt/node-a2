@@ -13,8 +13,14 @@ export default {
   },
   Security: {
     JWT: {
-      SecretKey: process.env.JWT_SECRET_KEY,
-      ExpireInSeconds: 3600
+      LongSession: {
+        SecretKey: process.env.JWT_LONG_SESSION_KEY || "1234",
+        ExpiresInSeconds: process.env.JWT_LONG_SESSION_TIME || 604800 // 7 Days
+      },
+      RefreshSession: {
+        SecretKey: process.env.JWT_REFRESH_SESSION_KEY || "1234",
+        ExpiresInSeconds: process.env.JWT_REFRESH_SESSION_TIME || 21600 // 6 Hours
+      }
     }
   }
 }

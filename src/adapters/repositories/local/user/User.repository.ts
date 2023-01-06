@@ -3,7 +3,13 @@ import { IUserRepository } from "../../../../application/modules/users/providerC
 import userModel from "../../../../infrastructure/databases/local/User.model"
 
 export class LocalUserRepository implements IUserRepository {
-  async create(userData: User): Promise<User> {
+  async update(uid: string, attributes: Record<string, any>): Promise<User | null> {
+    return userModel.findAndUpdate(uid, attributes)
+  }
+  async fetch(email: string): Promise<User | null> {
+    return userModel.get(email)
+  }
+  async create(userData: User): Promise<User | null> {
     return userModel.create(userData)
   }
 }
