@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { Result } from "../../application/shared/useCases/Result"
+import { Result } from "../../application/shared/useCases/BaseUseCase"
 
 export function errorHandler(e: Error, req: Request, res: Response, next: NextFunction) {
   if (!e) return

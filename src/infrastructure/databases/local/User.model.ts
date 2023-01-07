@@ -1,46 +1,29 @@
 import { v4 } from "uuid"
+import { IUser } from "../../../domain/user/IUser"
 import { User } from "../../../domain/user/User"
-import db from "./db.mock.json"
-
-type IUser = {
-  uid: string,
-  token: string | null,
-  firstName: string
-  lastName: string
-  email: string
-  gender: string
-  password: string
-  verified: boolean
-  createdAt: string
-}
+import db from "./db.mock"
 
 export class UserModel {
-  findAndUpdate(uid: string, attributes: Record<string, any>): User | null {
-    const userAttrs = ["token", "firstName", "lastName", "email", "gender", "password", "verified"]
-    if (!uid || !attributes) return null
-
-    const user = this.get(uid)
-    if (!user) return null
-
-    let somethingWasChange = false
-    for (const attrName of Object.keys(attributes)) {
-      if (userAttrs.includes(attrName)) {
-        somethingWasChange = true
-        user[attrName] = attributes[attrName]
-      }
-    }
-    if (somethingWasChange) return user
+  update(user: User): User | null {
+    for (const userFetched of db.users)
+      if (userFetched.uid === user.uid) return user
     return null
   }
 
-  get(input: string): IUser | null {
-    const user = db.users.find(value => value.email == input || value.uid == input)
-    return user ? user : null
+  getBy(input: Record<string, any>): User | null {
+    const inputKeys = Object.keys(input)
+    for (const user of db.users) {
+      for (const keyToVerify of inputKeys) {
+        if (user[keyToVerify] === undefined || user[keyToVerify] !== input[keyToVerify]) break
+        return user
+      }
+    }
+    return null
   }
 
-  create(user: User): IUser {
+  create(user: IUser): User {
     const uid = v4()
-    const userModeled: IUser = {
+    const userModeled: User = {
       uid,
       token: user.token,
       firstName: user.firstName,

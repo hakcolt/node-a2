@@ -1,23 +1,28 @@
-export class Validation {
-  validateObject(obj: any, attributesParam: string[]): string {
-    const validateSyntax = /^[a-z]([\w\d-]*[a-z\d])?:[a-z]+$/i
-    const attributes = attributesParam.filter(value => validateSyntax.test(value))
-    
-    const missingAttributes: string[] = []
-    for (const attributeSet of attributes) {
-      const [attributeName, attributeType] = attributeSet.split(":")
-      const attributeValue = obj[attributeName]
-      if (!attributeValue || typeof attributeValue !== attributeType)
-        missingAttributes.push(attributeSet)
-    }
+import { Validation as Va } from "@hakcolt/validator"
 
-    const result = this.formatOutput(missingAttributes)
-    return result.join(", ")
+
+export class Validation {
+  private validator = new Va()
+
+  validateObject(obj: any, attributesParam: string[]): string[] {
+    return this.validator.validateObject(obj, attributesParam)
   }
 
-  formatOutput(attributes: string[]): string[] {
-    if (attributes.length > 0) return attributes.map(attr => attr.replace(":", ": "))
-    else return attributes
+  formatMissingAttributes(missingAttributes: string[]): string {
+    const attrFormated = missingAttributes.map(item => item.replace(":", ": "))
+    return attrFormated.join(", ")
+  }
+
+  validateEmail(email: string): boolean {
+    return this.validator.validateEmail(email)
+  }
+
+
+  /**
+   * The password must contain least at one upper case and one lower case letter, one digit and a length of least at 8 characters 
+   */
+  validatePassword(password: string): boolean {
+    return this.validator.validatePassword(password)
   }
 }
 

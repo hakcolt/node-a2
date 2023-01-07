@@ -2,106 +2,123 @@ import { beforeAll, describe, expect, it } from "vitest"
 import { RegisterUserUseCase } from "../../../../../../src/application/modules/users/useCases/register"
 import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
 import { AuthProvider } from "../../../../../adapters/providers/Auth.provider"
+import { LocaleType, plurals, strings } from "../../../../shared/locals"
 
 describe("when try to register user", () => {
   let registerUseCase: RegisterUserUseCase
+  let auth: AuthProvider
   beforeAll(() => {
     const repo = new LocalUserRepository()
-    const auth = new AuthProvider()
+    auth = new AuthProvider()
     registerUseCase = new RegisterUserUseCase(repo, auth)
   })
 
   it("should return 201 if user was created", async () => {
-    const result = await registerUseCase.execute({
+    const result = await registerUseCase.execute(LocaleType.EN, {
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests@gmail.com",
       "gender": "Male",
-      "password": "test123",
+      "password": "Test123",
     })
 
-    expect(result.error).toBe(undefined)
-    expect(result.message).toBe("User created, go to /login to get the access token")
+    expect(result.error).toBeUndefined()
+    expect(result.message).toBe(registerUseCase.resources.get(strings.USER_CREATED))
     expect(result.statusCode).toBe(201)
-    expect(result.isSucess).toBe(true)
+    expect(result.isSucess).toBeTruthy()
   })
 
   it("should return a 400 error if user email was invalid", async () => {
-    const result = await registerUseCase.execute({
+    const result = await registerUseCase.execute(LocaleType.EN, {
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmailcom",
       "gender": "Male",
-      "password": "test123",
+      "password": "Test123",
     })
 
-    expect(result.message).toBe(undefined)
-    expect(result.error).toBe("Invalid email")
+    expect(result.message).toBeUndefined()
+    expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_EMAIL))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBe(false)
+    expect(result.isSucess).toBeFalsy()
   })
 
   it("should return a 400 error if user password has less than 6 characters", async () => {
-    const result = await registerUseCase.execute({
+    const result = await registerUseCase.execute(LocaleType.EN, {
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmail.com",
       "gender": "Male",
-      "password": "test",
+      "password": "Te4t",
     })
 
-    expect(result.message).toBe(undefined)
-    expect(result.error).toBe("Invalid password")
+    expect(result.message).toBeUndefined()
+    expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_PASSWORD))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBe(false)
+    expect(result.isSucess).toBeFalsy()
+  })
+
+  it("should return status 403 if password has only lower case letters", async () => {
+    const result = await registerUseCase.execute(LocaleType.EN, {
+      "firstName": "Igor",
+      "lastName": "Hakcolt",
+      "email": "tests2@gmail.com",
+      "gender": "Male",
+      "password": "testtest",
+    })
+
+    expect(result.message).toBeUndefined()
+    expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_PASSWORD))
+    expect(result.statusCode).toBe(400)
+    expect(result.isSucess).toBeFalsy()
   })
 
   it("should return a 400 error if user gender was invalid", async () => {
-    const result = await registerUseCase.execute({
+    const result = await registerUseCase.execute(LocaleType.EN, {
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmail.com",
       "gender": "test",
-      "password": "test123",
+      "password": "Test123",
     })
 
-    expect(result.message).toBe(undefined)
-    expect(result.error).toBe("Invalid gender")
+    expect(result.message).toBeUndefined()
+    expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_GENDER))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBe(false)
+    expect(result.isSucess).toBeFalsy()
   })
 
   it("should return a 403 error if user already exists", async () => {
-    const createUser = async () => registerUseCase.execute({
+    const createUser = async () => registerUseCase.execute(LocaleType.EN, {
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmail.com",
       "gender": "male",
-      "password": "test123",
+      "password": "Test123",
     })
 
     const result = await createUser()
-    expect(result.message).toBe("User created, go to /login to get the access token")
-    expect(result.error).toBe(undefined)
+    expect(result.message).toBe(registerUseCase.resources.get(strings.USER_CREATED))
+    expect(result.error).toBeUndefined()
     expect(result.statusCode).toBe(201)
-    expect(result.isSucess).toBe(true)
+    expect(result.isSucess).toBeTruthy()
 
     const result2 = await createUser()
-    expect(result2.error).toBe("User already exists")
-    expect(result2.message).toBe(undefined)
-    expect(result2.statusCode).toBe(403)
-    expect(result2.isSucess).toBe(false)
+    expect(result2.error).toBe(registerUseCase.resources.get(strings.USER_ALREADY_EXISTS))
+    expect(result2.message).toBeUndefined()
+    expect(result2.statusCode).toBe(409)
+    expect(result2.isSucess).toBeFalsy()
   })
 
   it("should return a 400 error if any attribute was missing", async () => {
-    const result = await registerUseCase.execute({
+    const result = await registerUseCase.execute(LocaleType.EN, {
       "firstName": "Igor",
       "email": "tests2@gmail.com"
     })
 
-    expect(result.message).toBe(undefined)
-    expect(result.error).toBe("Missing attributes: " + "lastName: string, gender: string, password: string")
+    expect(result.message).toBeUndefined()
+    expect(result.error).toBe(registerUseCase.resources.getWithParams(plurals.MISSING_ATRIBUTES, "lastName: string, gender: string, password: string"))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBe(false)
+    expect(result.isSucess).toBeFalsy()
   })
 })

@@ -1,4 +1,5 @@
-import { Result } from "../../../shared/useCases/Result"
+import { strings, plurals, Resources } from "../../../shared/locals"
+import { Result } from "../../../shared/useCases/BaseUseCase"
 import validation from "../../../shared/utils/Validation"
 
 export class CredentialDTO {
@@ -12,22 +13,24 @@ export class CredentialDTO {
     return credentialDTO
   }
 
-  validate(result: Result): boolean {
-    if (!this.email && !this.password) {
-      result.setError("Need authentication", 400)
-      return false
-    }
+  validate(result: Result, resource: Resources): boolean {
     const missingAttributes = validation.validateObject(this, ["email:string", "password:string"])
 
-    if (missingAttributes) {
-      result.setError("Missing attributes: " + missingAttributes, 400)
+    if (missingAttributes.length) {
+      result.setError(resource.getWithParams(plurals.MISSING_ATRIBUTES, validation.formatMissingAttributes(missingAttributes)), 400)
       return false
     }
 
-    if (this.password.length < 6) {
-      result.setError("Email or password incorrect", 403)
+    if (!validation.validateEmail(this.email)) {
+      result.setError(resource.get(strings.EMAIL_PASSWORD_INVALID), 403)
       return false
     }
+
+    if (!validation.validatePassword(this.password)) {
+      result.setError(resource.get(strings.EMAIL_PASSWORD_INVALID), 403)
+      return false
+    }
+    
     return true
   }
 }

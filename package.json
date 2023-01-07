@@ -9,6 +9,7 @@
     "coverage": "vitest --coverage",
     "dev": "ts-node-dev --transpile-only src/index.ts"
   },
+  "repository": "https://github.com/hakcolt/ts-template.git",
   "author": "Igor Hakcolt",
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +25,9 @@
     "vitest": "^0.26.2"
   },
   "dependencies": {
+    "@hakcolt/resources": "^1.0.0",
+    "@hakcolt/result": "^1.0.0",
+    "@hakcolt/validator": "^1.0.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",

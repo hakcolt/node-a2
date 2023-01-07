@@ -1,11 +1,17 @@
-import { NextFunction, Response, Router } from "express"
-import { Result, ResultData } from "../../application/shared/useCases/Result"
+import { Result, ResultData } from "../../application/shared/useCases/BaseUseCase"
+import { INextFunction } from "./context/INextFunction"
+import { IResponse } from "./context/IResponse"
+import { IRequest } from "./context/IResquest"
+import { IRouter } from "./context/IRouter"
 
+type EntryPointHandler = (req: IRequest, res: IResponse, next: INextFunction) => Promise<void>;
+
+export { IRouter, EntryPointHandler, IRequest, IResponse, INextFunction }
 
 export abstract class BaseController {
-  abstract initializeRoutes(router: Router): void
+  abstract initializeRoutes(router: IRouter): void
 
-  getResultToResponse(res: Response, result: Result): Result {
+  getResultToResponse(res: IResponse, result: Result): Result {
     if (result.isSucess && result instanceof ResultData && result.cookie) {
       const cookie = result.cookie
       res.cookie(cookie.name, cookie.value)
@@ -18,7 +24,7 @@ export abstract class BaseController {
     return result
   }
 
-  async handleResult(res: Response, next: NextFunction, useCase: Promise<Result>) {
+  async handleResult(res: IResponse, next: INextFunction, useCase: Promise<Result>) {
     try {
       let result = await useCase
 
@@ -27,7 +33,7 @@ export abstract class BaseController {
     } catch (e) { next(e) }
   }
 
-  async handleMiddleware(res: Response, next: NextFunction, useCase: Promise<Result>) {
+  async handleMiddleware(res: IResponse, next: INextFunction, useCase: Promise<Result>) {
     try {
       let result = await useCase
 

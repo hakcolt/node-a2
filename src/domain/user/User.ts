@@ -1,5 +1,5 @@
 export class User {
-  uid: string | null
+  uid: string
   token: string | null
   firstName: string
   lastName: string

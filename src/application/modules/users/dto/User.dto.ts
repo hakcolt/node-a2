@@ -1,6 +1,8 @@
 import { Gender } from "../../../../domain/user/Gender.enum"
+import { IUser } from "../../../../domain/user/IUser"
 import { User } from "../../../../domain/user/User"
-import { Result } from "../../../shared/useCases/Result"
+import { plurals, Resources, strings } from "../../../shared/locals"
+import { Result } from "../../../shared/useCases/BaseUseCase"
 import validation from "../../../shared/utils/Validation"
 
 
@@ -29,35 +31,34 @@ export class UserDTO {
     return userDto
   }
 
-  validate(result: Result): boolean {
+  validate(result: Result, resources: Resources): boolean {
     const missingAttributes = validation.validateObject(this, ["firstName:string", "lastName:string", "email:string", "gender:string", "password:string"])
 
-    if (missingAttributes) {
-      result.setError("Missing attributes: " + missingAttributes, 400)
+    if (missingAttributes.length) {
+      result.setError(resources.getWithParams(plurals.MISSING_ATRIBUTES, validation.formatMissingAttributes(missingAttributes)), 400)
       return false
     }
 
-    if (this.password.length < 6) {
-      result.setError("Invalid password", 400)
+    if (!validation.validatePassword(this.password)) {
+      result.setError(resources.get(strings.INVALID_PASSWORD), 400)
       return false
     }
 
-    const genders = [Gender.MALE, Gender.FEMALE, Gender.OTHER]
-    if (!genders.find(gender => gender == this.gender)) {
-      result.setError("Invalid gender", 400)
+    const genders = Object.values(Gender)
+    if (!genders.includes(this.gender as Gender)) {
+      result.setError(resources.get(strings.INVALID_GENDER), 400)
       return false
     }
 
-    const validateEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\])|(([a-zA-Z\-\d]+\.)+[a-zA-Z]{2,}))$/
-    if (!validateEmail.test(this.email)) {
-      result.setError("Invalid email", 400)
+    if (!validation.validateEmail(this.email)) {
+      result.setError(resources.get(strings.INVALID_EMAIL), 400)
       return false
     }
     return true
   }
 
-  toDomain(): User {
-    const user = new User()
+  toDomain(): IUser {
+    const user: IUser = new User()
     user.uid = null
     user.token = null
     user.firstName = this.firstName
