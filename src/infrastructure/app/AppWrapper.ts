@@ -1,4 +1,4 @@
-import express, { Express, Router, json } from "express"
+import express, { Express, Router } from "express"
 import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import { BaseController } from "../../adapters/base/Base.controller"
@@ -6,9 +6,11 @@ import { AppSettings } from "../../application/shared/settings/AppSettings"
 import configs from "../config"
 import { errorHandler } from "../middlewares/error"
 import { notFoundMiddleware } from "../middlewares/404"
+import { verifyToken } from "../middlewares/authorization"
 
 export class AppWrapper {
   app: Express
+  router: Router = Router()
 
   constructor(controllers: BaseController[]) {
     this.app = express()
@@ -21,18 +23,19 @@ export class AppWrapper {
   }
 
   loadMiddleware() {
-    this.app
-    .use(helmet())
-    .use(cookieParser())
-    .use(json())
+    this.app.use(helmet())
+    this.router
+      .use(cookieParser())
+      .use(express.json())
+      .use(express.urlencoded({ extended: true }))
+      .use(verifyToken)
   }
 
   loadControllers(controllers: BaseController[]) {
-    const router = Router()
-    controllers.forEach((controller) => controller.initializeRoutes(router))
-    router.use(notFoundMiddleware)
-    router.use(errorHandler)
-    this.app.use(AppSettings.SERVER_ROOT, router)
+    controllers.forEach((controller) => controller.initializeRoutes(this.router))
+    this.router.use(notFoundMiddleware)
+    this.router.use(errorHandler)
+    this.app.use(AppSettings.SERVER_ROOT, this.router)
   }
 
   async initializeServices(): Promise<void> {

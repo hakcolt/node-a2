@@ -1,19 +1,14 @@
 import { NextFunction, Request, Response } from "express"
 import { Result } from "../../application/shared/useCases/BaseUseCase"
+import config from "../config"
 
 
 export function notFoundMiddleware(req: Request, res: Response, next: NextFunction) {
   const result = new Result()
-  result.setError("Page not found. Verify the request method, the url and try again.", 404)
-  Object.defineProperties(result, {
-    method: { value: req.method },
-    endPoint: { value: req.path }
-  })
+  result.setError("Page not found. Verify the request method and the path, and try again.", 404)
   res.status(result.statusCode).json({
-    statusCode: result.statusCode,
-    error: result.error,
-    isSucess: result.isSucess,
+    ...result,
     method: req.method,
-    url: req.url
+    path: config.Server.Root + req.path
   })
 }
