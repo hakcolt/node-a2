@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express"
 import { LocaleType } from "../../application/shared/locals"
 import { Result, ResultData } from "../../application/shared/useCases/BaseUseCase"
+import { IRequest } from "./context/IRequest"
+
+export { IRequest }
 
 export abstract class BaseController {
   abstract initializeRoutes(router: Router): void
@@ -16,10 +19,6 @@ export abstract class BaseController {
       result = tempResult
     }
     return result
-  }
-
-  getLocale(req: Request): LocaleType {
-    return req.headers["accept-language"] as LocaleType
   }
 
   async handleResult(res: Response, next: NextFunction, useCase: Promise<Result>) {

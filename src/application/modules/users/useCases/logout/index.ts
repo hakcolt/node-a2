@@ -2,18 +2,18 @@ import { IUserRepository } from "../../providerContracts/IUser.repository"
 import { BaseUseCase, ResultData } from "../../../../shared/useCases/BaseUseCase"
 import { Result } from "../../../../shared/useCases/BaseUseCase"
 import { IAuthProvider } from "../../providerContracts/IAuth.provider"
-import { LocaleType, strings } from "../../../../shared/locals"
+import { LocaleType, Resources, strings } from "../../../../shared/locals"
 
 export class LogoutUserUseCase extends BaseUseCase {
   constructor(
+    resources: Resources,
     private readonly repository: IUserRepository,
     private readonly authProvider: IAuthProvider
   ) {
-    super()
+    super(resources)
   }
 
-  override async execute(locale: LocaleType, token: any): Promise<Result> {
-    this.setLanguage(locale)
+  override async execute(token: any): Promise<Result> {
     const result = new ResultData()
 
     if (token && typeof token === "string" && this.authProvider.verifyJWT(token, true)) {
@@ -21,11 +21,8 @@ export class LogoutUserUseCase extends BaseUseCase {
 
       const user = await this.repository.fetchBy({ email: sessionInput.email })
       if (user && user.token === token) {
-        user.token = null
-        const userUpdated = await this.repository.update(user)
         result.cookie = { name: "SESSION_TOKEN", value: null }
-        if (userUpdated) result.setMessage(this.resources.get(strings.USER_DISCONNECTED), 200)
-        else result.setError(this.resources.get(strings.SOMETHING_WAS_WRONG), 500)
+        result.setMessage(this.resources.get(strings.USER_DISCONNECTED), 200)
         return result
       }
     }

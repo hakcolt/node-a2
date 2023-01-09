@@ -1,4 +1,4 @@
-import { BaseController } from "../base/Base.controller"
+import { BaseController, IRequest } from "../base/Base.controller"
 import { RegisterUserUseCase } from "../../application/modules/users/useCases/register/index"
 import { LocalUserRepository } from "../repositories/local/user/User.repository"
 import { LoginUserDefaultUseCase } from "../../application/modules/users/useCases/login/LoginUserDefault.usecase.ts"
@@ -9,54 +9,58 @@ import { NextFunction, Request, Response, Router } from "express"
 
 export class UserController extends BaseController {
 
-  logInWithToken = async (req: Request, res: Response, next: NextFunction) => {
+  logInWithToken = async (request: Request, res: Response, next: NextFunction) => {
+    const req = request as IRequest
+
     const repository = new LocalUserRepository()
     const authProvider = new AuthProvider()
-    const loginService = new LoginUserWithTokenUseCase(repository, authProvider)
+    const loginService = new LoginUserWithTokenUseCase(req.resources, repository, authProvider)
 
-    const locale = this.getLocale(req)
     const token = req.cookies.SESSION_TOKEN
 
-    this.handleMiddleware(res, next, loginService.execute(locale, token))
+    this.handleResult(res, next, loginService.execute(token))
   }
 
-  logInDefault = async (req: Request, res: Response, next: NextFunction) => {
+  logInDefault = async (request: Request, res: Response, next: NextFunction) => {
+    const req = request as IRequest
+
     const repository = new LocalUserRepository()
     const authProvider = new AuthProvider()
-    const loginService = new LoginUserDefaultUseCase(repository, authProvider)
+    const loginService = new LoginUserDefaultUseCase(req.resources, repository, authProvider)
 
-    const locale = this.getLocale(req)
     const credentials = req.body
 
-    this.handleResult(res, next, loginService.execute(locale, credentials))
+    this.handleResult(res, next, loginService.execute(credentials))
   }
 
-  logOut = async (req: Request, res: Response, next: NextFunction) => {
+  logOut = async (request: Request, res: Response, next: NextFunction) => {
+    const req = request as IRequest
+
     const repository = new LocalUserRepository()
     const authProvider = new AuthProvider()
-    const logoutService = new LogoutUserUseCase(repository, authProvider)
+    const logoutService = new LogoutUserUseCase(req.resources, repository, authProvider)
 
-    const locale = this.getLocale(req)
     const token = req.cookies.SESSION_TOKEN
 
-    this.handleResult(res, next, logoutService.execute(locale, token))
+    this.handleResult(res, next, logoutService.execute(token))
   }
 
-  signUp = async (req: Request, res: Response, next: NextFunction) => {
+  signUp = async (request: Request, res: Response, next: NextFunction) => {
+    const req = request as IRequest
+
     const repository = new LocalUserRepository()
     const authProvider = new AuthProvider()
-    const registerService = new RegisterUserUseCase(repository, authProvider)
+    const registerService = new RegisterUserUseCase(req.resources, repository, authProvider)
 
-    const locale = this.getLocale(req)
     const user = req.body
 
-
-    this.handleResult(res, next, registerService.execute(locale, user))
+    this.handleResult(res, next, registerService.execute(user))
   }
 
   override initializeRoutes(router: Router) {
-    router.post("/users/logout", this.logOut)
-    router.post("/users/login", this.logInWithToken, this.logInDefault)
+    router.get("/users/logout", this.logOut)
+    router.get("/users/login", this.logInWithToken)
+    router.post("/users/login", this.logInDefault)
     router.post("/users/signup", this.signUp)
   }
 }

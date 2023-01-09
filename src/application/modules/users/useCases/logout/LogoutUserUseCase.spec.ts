@@ -4,7 +4,7 @@ import { AuthProvider } from "../../../../../adapters/providers/Auth.provider"
 import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
 import config from "../../../../../infrastructure/config"
 import dbMock from "../../../../../infrastructure/databases/local/db.mock"
-import { LocaleType, strings } from "../../../../shared/locals"
+import { createResource, strings } from "../../../../shared/locals"
 import { AppSettings } from "../../../../shared/settings/AppSettings"
 import { LogoutUserUseCase } from "./"
 
@@ -19,7 +19,7 @@ describe("when try to log out user", () => {
   beforeAll(() => {
     const repo = new LocalUserRepository()
     auth = new AuthProvider()
-    logoutUseCase = new LogoutUserUseCase(repo, auth)
+    logoutUseCase = new LogoutUserUseCase(createResource(), repo, auth)
   })
   
   it("should return status 200 if there is not any problem", async () => {
@@ -28,7 +28,7 @@ describe("when try to log out user", () => {
       uid: "9177a65d-6f83-478d-954d-10be5a2df24d"
     }, true)
     dbMock.users[1].token = session.token
-    const result = await logoutUseCase.execute(LocaleType.EN, session.token)
+    const result = await logoutUseCase.execute(session.token)
 
     const resultData = (result as ResultData<unknown>)
     const cookie = resultData.cookie
@@ -42,7 +42,7 @@ describe("when try to log out user", () => {
   })
 
   it("should return status 409 if input is wrong", async () => {
-    const result = await logoutUseCase.execute(LocaleType.EN, "eyJhbGciOiJIUzINiIsInR5cCI6IkpXVCJ9.eyJ1aQiOiI5MTc3Yk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyY0MjA2LCJleHAiOjE2NzI5NjQ4MT9.S_S_UtZn1-0kMiQPSPATzatSYmeDkLCHVP9R8P0")
+    const result = await logoutUseCase.execute("eyJhbGciOiJIUzINiIsInR5cCI6IkpXVCJ9.eyJ1aQiOiI5MTc3Yk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyY0MjA2LCJleHAiOjE2NzI5NjQ4MT9.S_S_UtZn1-0kMiQPSPATzatSYmeDkLCHVP9R8P0")
 
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(logoutUseCase.resources.get(strings.NO_USER_LOGGED_IN))
@@ -56,8 +56,8 @@ describe("when try to log out user", () => {
 
     authProviderTemp.verifyJWT = () => true
   
-    const logoutUserCaseTemp = new LogoutUserUseCase(repositoryTemp, authProviderTemp)
-    const result = await logoutUserCaseTemp.execute(LocaleType.EN, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI5MTc3YTk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyOTY1MTI1LCJleHAiOjE2NzI5NjU3Mjl9.d9SayalbNOmXi8VcABf8_equJZVsi5TfDG8phLJ6eKc")
+    const logoutUserCaseTemp = new LogoutUserUseCase(createResource(), repositoryTemp, authProviderTemp)
+    const result = await logoutUserCaseTemp.execute("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI5MTc3YTk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyOTY1MTI1LCJleHAiOjE2NzI5NjU3Mjl9.d9SayalbNOmXi8VcABf8_equJZVsi5TfDG8phLJ6eKc")
 
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(logoutUseCase.resources.get(strings.NO_USER_LOGGED_IN))
@@ -66,7 +66,7 @@ describe("when try to log out user", () => {
   })
 
   it("should return nothing if token is null", async () => {
-    const result = await logoutUseCase.execute(LocaleType.EN, null)
+    const result = await logoutUseCase.execute(null)
 
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(logoutUseCase.resources.get(strings.NO_USER_LOGGED_IN))

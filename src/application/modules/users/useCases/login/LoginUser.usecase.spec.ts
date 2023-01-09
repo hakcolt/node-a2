@@ -8,7 +8,7 @@ import { LoginUserWithTokenUseCase } from "./LoginUserWithToken.usecase"
 import { ResultData } from "../../../../shared/useCases/BaseUseCase"
 
 import { ISession } from "../../../../../domain/session/ISession"
-import { LocaleType, plurals, strings } from "../../../../shared/locals"
+import { createResource, plurals, strings } from "../../../../shared/locals"
 import dbMock from "../../../../../infrastructure/databases/local/db.mock"
 
 AppSettings.init(configs)
@@ -22,11 +22,11 @@ describe("when try to login user with email and password", () => {
   beforeAll(() => {
     const repo = new LocalUserRepository()
     auth = new AuthProvider()
-    loginUseCase = new LoginUserDefaultUseCase(repo, auth)
+    loginUseCase = new LoginUserDefaultUseCase(createResource(), repo, auth)
   })
 
   it("should return status 200 if there is not any problem", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, {
+    const result = await loginUseCase.execute({
       email: "test@gmail.com",
       password: "Test123"
     })
@@ -41,7 +41,7 @@ describe("when try to login user with email and password", () => {
   })
 
   it("should return status 400 if email is missing", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, {
+    const result = await loginUseCase.execute({
       email: 0,
       password: "Test123"
     })
@@ -53,7 +53,7 @@ describe("when try to login user with email and password", () => {
   })
 
   it("should return status 403 if email is invalid", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, {
+    const result = await loginUseCase.execute({
       email: "test@hakcoltcom",
       password: "Test123"
     })
@@ -65,7 +65,7 @@ describe("when try to login user with email and password", () => {
   })
 
   it("should return status 403 if password is incorrect", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, {
+    const result = await loginUseCase.execute({
       email: "test@gmail.com",
       password: "Test321"
     })
@@ -77,7 +77,7 @@ describe("when try to login user with email and password", () => {
   })
 
   it("should return status 403 if password length is less than 6", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, {
+    const result = await loginUseCase.execute({
       email: "test@gmail.com",
       password: "1234"
     })
@@ -89,7 +89,7 @@ describe("when try to login user with email and password", () => {
   })
 
   it("should return status 403 if password has only lower case letters", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, {
+    const result = await loginUseCase.execute({
       email: "test@gmail.com",
       password: "testtest"
     })
@@ -108,7 +108,7 @@ describe("when try to login user with token", () => {
   beforeAll(() => {
     const repo = new LocalUserRepository()
     auth = new AuthProvider()
-    loginUseCase = new LoginUserWithTokenUseCase(repo, auth)
+    loginUseCase = new LoginUserWithTokenUseCase(createResource(), repo, auth)
   })
 
   it("should return status 200 if there is not any problem", async () => {
@@ -117,7 +117,7 @@ describe("when try to login user with token", () => {
       uid: "9177a65d-6f83-478d-954d-10be5a2df24d"
     }, true)
     dbMock.users[1].token = session.token
-    const result = await loginUseCase.execute(LocaleType.EN, session.token)
+    const result = await loginUseCase.execute(session.token)
 
     expect(result.error).toBeUndefined()
     expect(result.message).toBe(loginUseCase.resources.get(strings.USER_ALREADY_LOGGED_IN))
@@ -126,12 +126,12 @@ describe("when try to login user with token", () => {
   })
 
   it("should return nothing if input is wrong", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, "eyJhbGciOiJIUzINiIsInR5cCI6IkpXVCJ9.eyJ1aQiOiI5MTc3Yk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyY0MjA2LCJleHAiOjE2NzI5NjQ4MT9.S_S_UtZn1-0kMiQPSPATzatSYmeDkLCHVP9R8P0")
+    const result = await loginUseCase.execute("eyJhbGciOiJIUzINiIsInR5cCI6IkpXVCJ9.eyJ1aQiOiI5MTc3Yk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyY0MjA2LCJleHAiOjE2NzI5NjQ4MT9.S_S_UtZn1-0kMiQPSPATzatSYmeDkLCHVP9R8P0")
 
-    expect(result.error).toBeUndefined()
     expect(result.message).toBeUndefined()
-    expect(result.statusCode).toBeUndefined()
-    expect(result.isSucess).toBeUndefined()
+    expect(result.error).toBe(loginUseCase.resources.get(strings.NEED_AUTHENTICATION))
+    expect(result.statusCode).toBe(403)
+    expect(result.isSucess).toBeFalsy()
   })
 
   it("should return nothing if token is valid but it expires or changed", async () => {
@@ -140,21 +140,21 @@ describe("when try to login user with token", () => {
 
     authProviderTemp.verifyJWT = () => true
   
-    const loginUserCaseTemp = new LoginUserWithTokenUseCase(repositoryTemp, authProviderTemp)
-    const result = await loginUserCaseTemp.execute(LocaleType.EN, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI5MTc3YTk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyOTY1MTI1LCJleHAiOjE2NzI5NjU3Mjl9.d9SayalbNOmXi8VcABf8_equJZVsi5TfDG8phLJ6eKc")
+    const loginUserCaseTemp = new LoginUserWithTokenUseCase(createResource(), repositoryTemp, authProviderTemp)
+    const result = await loginUserCaseTemp.execute("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI5MTc3YTk1ZC02ZjgzLTQ3OGQtOTY4ZC03M2JlNWEyZGYyNGQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjcyOTY1MTI1LCJleHAiOjE2NzI5NjU3Mjl9.d9SayalbNOmXi8VcABf8_equJZVsi5TfDG8phLJ6eKc")
 
-    expect(result.error).toBeUndefined()
     expect(result.message).toBeUndefined()
-    expect(result.statusCode).toBeUndefined()
-    expect(result.isSucess).toBeUndefined()
+    expect(result.error).toBe(loginUseCase.resources.get(strings.NEED_AUTHENTICATION))
+    expect(result.statusCode).toBe(403)
+    expect(result.isSucess).toBeFalsy()
   })
 
   it("should return nothing if token is null", async () => {
-    const result = await loginUseCase.execute(LocaleType.EN, null)
+    const result = await loginUseCase.execute(null)
 
-    expect(result.error).toBeUndefined()
     expect(result.message).toBeUndefined()
-    expect(result.statusCode).toBeUndefined()
-    expect(result.isSucess).toBeUndefined()
+    expect(result.error).toBe(loginUseCase.resources.get(strings.NEED_AUTHENTICATION))
+    expect(result.statusCode).toBe(403)
+    expect(result.isSucess).toBeFalsy()
   })
 })

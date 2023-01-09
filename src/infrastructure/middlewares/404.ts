@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express"
+import { IRequest } from "../../adapters/base/Base.controller"
+import { strings } from "../../application/shared/locals"
 import { Result } from "../../application/shared/useCases/BaseUseCase"
 import config from "../config"
 
 
-export function notFoundMiddleware(req: Request, res: Response, next: NextFunction) {
+export function notFoundMiddleware(request: Request, res: Response, next: NextFunction) {
+  const req = request as IRequest
+
   const result = new Result()
-  result.setError("Page not found. Verify the request method and the path, and try again.", 404)
+  result.setError(req.resources.get(strings.PAGE_NOT_FOUND), 404)
   res.status(result.statusCode).json({
     ...result,
     method: req.method,

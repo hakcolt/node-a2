@@ -5,18 +5,17 @@ import { IUserRepository } from "../../providerContracts/IUser.repository"
 import { CredentialDTO } from "../../dto/Credential.dto"
 import { User } from "../../../../../domain/user/User"
 import { IAuthProvider } from "../../providerContracts/IAuth.provider"
-import { strings, LocaleType } from "../../../../shared/locals"
+import { strings, Resources } from "../../../../shared/locals"
 
 export class LoginUserDefaultUseCase extends BaseUseCase {
   constructor(
+    resources: Resources,
     private readonly repository: IUserRepository,
     private readonly authProvider: IAuthProvider) {
-    super()
+    super(resources)
   }
 
-  override async execute(locale: LocaleType, data: any): Promise<Result> {
-    this.setLanguage(locale)
-
+  override async execute(data: any): Promise<Result> {
     const result = new ResultData<ISession>()
 
     const credentialDTO = CredentialDTO.fromJSON(data)

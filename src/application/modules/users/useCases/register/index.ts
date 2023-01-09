@@ -4,20 +4,19 @@ import { BaseUseCase } from "../../../../shared/useCases/BaseUseCase"
 import { IUserDTO, UserDTO } from "../../dto/User.dto"
 import { Result } from "../../../../shared/useCases/BaseUseCase"
 import { IAuthProvider } from "../../providerContracts/IAuth.provider"
-import { LocaleType, strings } from "../../../../shared/locals"
+import { LocaleType, Resources, strings } from "../../../../shared/locals"
 import { IUser } from "../../../../../domain/user/IUser"
 
 export class RegisterUserUseCase extends BaseUseCase {
   constructor(
+    resources: Resources,
     private readonly repository: IUserRepository,
     private readonly authProvider: IAuthProvider
   ) {
-    super()
+    super(resources)
    }
 
-  override async execute(locale: LocaleType, data: any): Promise<Result> {
-    this.setLanguage(locale)
-    
+  override async execute(data: any): Promise<Result> {    
     const result = new Result()
     const userDTO: UserDTO = UserDTO.fromJSON(data as IUserDTO)
 

@@ -1,12 +1,12 @@
 import express, { Express, Router } from "express"
 import helmet from "helmet"
+import cors from "cors"
 import cookieParser from "cookie-parser"
 import { BaseController } from "../../adapters/base/Base.controller"
 import { AppSettings } from "../../application/shared/settings/AppSettings"
 import configs from "../config"
-import { errorHandler } from "../middlewares/error"
-import { notFoundMiddleware } from "../middlewares/404"
-import { verifyToken } from "../middlewares/authorization"
+import { resources, verifyToken, notFoundMiddleware, errorHandler } from "../middlewares"
+import config from "../config"
 
 export class AppWrapper {
   app: Express
@@ -23,8 +23,17 @@ export class AppWrapper {
   }
 
   loadMiddleware() {
-    this.app.use(helmet())
+    this.app
+      .use(helmet())
+      .use(resources)
     this.router
+      .use(cors({
+        origin(origin, callback) {
+          if (config.Server.Origins.indexOf(origin!) !== -1 || !origin) // !origin allow REST tools and server-to-server requests
+          callback(null, origin)
+        },
+        methods: ["GET", "POST", "PUT"]
+      }))
       .use(cookieParser())
       .use(express.json())
       .use(express.urlencoded({ extended: true }))

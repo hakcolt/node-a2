@@ -1,21 +1,17 @@
-import { createResource, LocaleType, Resources } from "../locals"
+import { LocaleType, Resources } from "../locals"
 import { Result, ResultData } from "@hakcolt/result"
+import { ApplicationError } from "../errors/ApplicationError"
 
 
-export {Result, ResultData}
+export { Result, ResultData }
 
 export abstract class BaseUseCase {
-  resources: Resources
-  locale: LocaleType
 
-  constructor() {
-    this.resources = createResource()
-  }
+  constructor(readonly resources: Resources) { }
 
   setLanguage(locale: LocaleType) {
-    if (Object.values(LocaleType).includes(locale))
-      this.resources.setLanguage(locale)
+    if (Object.values(LocaleType).includes(locale)) this.resources.language = locale
   }
 
-  abstract execute(locale: LocaleType, data: any): Promise<Result>
+  abstract execute(data: any): Promise<Result>
 }

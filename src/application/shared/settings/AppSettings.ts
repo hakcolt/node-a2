@@ -7,8 +7,7 @@ export class AppSettings {
   static SERVER_PORT: string
   static SERVER_HOST: string
   static SERVER_ROOT: string
-  static DEVELOPMENT: string = "development"
-  static PRODUTION: string = "prodution"
+  static SERVER_ORIGINS: string[]
 
   static init(configs: Record<string, any>) {
     this.JWT_LONG_SESSION_KEY = configs.Security.JWT.LongSession.SecretKey
@@ -19,5 +18,6 @@ export class AppSettings {
     this.SERVER_PORT = configs.Server.Port
     this.SERVER_HOST = configs.Server.Host
     this.SERVER_ROOT = configs.Server.Root
+    this.SERVER_ORIGINS = configs.Server.Origins
   }
 }

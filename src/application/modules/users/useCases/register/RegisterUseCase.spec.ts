@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest"
 import { RegisterUserUseCase } from "../../../../../../src/application/modules/users/useCases/register"
 import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
 import { AuthProvider } from "../../../../../adapters/providers/Auth.provider"
-import { LocaleType, plurals, strings } from "../../../../shared/locals"
+import { createResource, plurals, strings } from "../../../../shared/locals"
 
 describe("when try to register user", () => {
   let registerUseCase: RegisterUserUseCase
@@ -10,11 +10,11 @@ describe("when try to register user", () => {
   beforeAll(() => {
     const repo = new LocalUserRepository()
     auth = new AuthProvider()
-    registerUseCase = new RegisterUserUseCase(repo, auth)
+    registerUseCase = new RegisterUserUseCase(createResource(), repo, auth)
   })
 
   it("should return 201 if user was created", async () => {
-    const result = await registerUseCase.execute(LocaleType.EN, {
+    const result = await registerUseCase.execute({
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests@gmail.com",
@@ -29,7 +29,7 @@ describe("when try to register user", () => {
   })
 
   it("should return a 400 error if user email was invalid", async () => {
-    const result = await registerUseCase.execute(LocaleType.EN, {
+    const result = await registerUseCase.execute({
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmailcom",
@@ -44,7 +44,7 @@ describe("when try to register user", () => {
   })
 
   it("should return a 400 error if user password has less than 6 characters", async () => {
-    const result = await registerUseCase.execute(LocaleType.EN, {
+    const result = await registerUseCase.execute({
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmail.com",
@@ -59,7 +59,7 @@ describe("when try to register user", () => {
   })
 
   it("should return status 403 if password has only lower case letters", async () => {
-    const result = await registerUseCase.execute(LocaleType.EN, {
+    const result = await registerUseCase.execute({
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmail.com",
@@ -74,7 +74,7 @@ describe("when try to register user", () => {
   })
 
   it("should return a 400 error if user gender was invalid", async () => {
-    const result = await registerUseCase.execute(LocaleType.EN, {
+    const result = await registerUseCase.execute({
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmail.com",
@@ -89,7 +89,7 @@ describe("when try to register user", () => {
   })
 
   it("should return a 403 error if user already exists", async () => {
-    const createUser = async () => registerUseCase.execute(LocaleType.EN, {
+    const createUser = async () => registerUseCase.execute({
       "firstName": "Igor",
       "lastName": "Hakcolt",
       "email": "tests2@gmail.com",
@@ -111,7 +111,7 @@ describe("when try to register user", () => {
   })
 
   it("should return a 400 error if any attribute was missing", async () => {
-    const result = await registerUseCase.execute(LocaleType.EN, {
+    const result = await registerUseCase.execute({
       "firstName": "Igor",
       "email": "tests2@gmail.com"
     })
