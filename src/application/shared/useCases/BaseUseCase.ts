@@ -1,8 +1,5 @@
 import { LocaleType, Resources } from "../locals"
 import { Result, ResultData } from "@hakcolt/result"
-import { ApplicationError } from "../errors/ApplicationError"
-
-
 export { Result, ResultData }
 
 export abstract class BaseUseCase {

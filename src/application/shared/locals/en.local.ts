@@ -16,5 +16,5 @@ export default {
   [strings.PAGE_NOT_FOUND]: "Page not found. Verify the request method and the path, and try again.",
   [strings.NEED_AUTHENTICATION]: "Need Authentication. Go to POST /login",
 
-  [plurals.MISSING_ATRIBUTES]: "Missing attributes: %s"
+  [plurals.MISSING_ATRIBUTES]: "Missing attributes: %$s"
 }

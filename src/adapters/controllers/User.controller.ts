@@ -58,10 +58,10 @@ export class UserController extends BaseController {
   }
 
   override initializeRoutes(router: Router) {
-    router.get("/users/logout", this.logOut)
-    router.get("/users/login", this.logInWithToken)
-    router.post("/users/login", this.logInDefault)
-    router.post("/users/signup", this.signUp)
+    router.get("v1/users/logout", this.logOut)
+    router.get("v1/users/login", this.logInWithToken)
+    router.post("v1/users/login", this.logInDefault)
+    router.post("v1/users/signup", this.signUp)
   }
 }
 

@@ -4,13 +4,22 @@
   "description": "A template for avanced projects",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "rm -rf dist/* && tsc --sourceMap false",
+    "build": "rm -rf dist/**/* && tsc --sourceMap false",
     "test": "vitest",
     "coverage": "vitest --coverage",
-    "dev": "ts-node-dev --transpile-only src/index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "repository": "https://github.com/hakcolt/ts-template.git",
   "author": "Igor Hakcolt",
+  "keywords": [
+    "node",
+    "express",
+    "clean-architecture",
+    "solid",
+    "ddd",
+    "multi-language",
+    "advanced-api"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

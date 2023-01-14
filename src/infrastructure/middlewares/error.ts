@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { ApplicationError } from "../../application/shared/errors/ApplicationError"
+import { AppSettings } from "../../application/shared/settings/AppSettings"
 import { Result } from "../../application/shared/useCases/BaseUseCase"
 
 export function errorHandler(e: Error, req: Request, res: Response, next: NextFunction) {
@@ -10,12 +11,16 @@ export function errorHandler(e: Error, req: Request, res: Response, next: NextFu
 
 function handleError(res: Response, e: ApplicationError) {
   const result = new Result()
+  if (AppSettings.SERVER_MODE === "development") {
+    console.log("Application Error:", e.message)
+    console.log(e.stack)
+  }
   result.setError(e.message, e.statusCode)
   res.status(result.statusCode).json(result)
 }
 
 function handleNodeError(res: Response, e: Error) {
-  console.log("Uncaught error: ", e.message)
+  console.log("Uncaught error:", e.message)
   console.log(e.stack)
   const result = new Result()
   result.setError("Internal Error", 500)
