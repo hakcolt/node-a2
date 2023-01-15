@@ -6,7 +6,7 @@ import db from "./db.mock"
 export class UserModel {
   update(user: User): User | null {
     for (const userFetched of db.users)
-      if (userFetched.uid === user.uid) return user
+      if (userFetched.id === user.id) return user
     return null
   }
 
@@ -24,12 +24,13 @@ export class UserModel {
   create(user: IUser): User {
     const uid = v4()
     const userModeled: User = {
-      uid,
-      token: user.token,
+      id: uid,
+      refreshToken: user.refreshToken,
       firstName: user.firstName,
       lastName: user.lastName,
       password: user.password,
       email: user.email,
+      imageUrl: user.imageUrl,
       gender: user.gender,
       createdAt: user.createdAt,
       verified: user.verified

@@ -1,11 +1,12 @@
-import { ISession } from "../../../../../domain/session/ISession"
-import { LocaleType, Resources, strings } from "../../../../shared/locals"
+import { AccessToken } from "../../../../../domain/session/AccessToken"
+import { Resources, strings } from "../../../../shared/locals"
 import { BaseUseCase } from "../../../../shared/useCases/BaseUseCase"
 import { Result, ResultData } from "../../../../shared/useCases/BaseUseCase"
 import { IAuthProvider } from "../../providerContracts/IAuth.provider"
-import { IUserRepository } from "../../providerContracts/IUser.repository"
+import { IUserRepository } from "../../../users/providerContracts/IUser.repository"
+import { UserTokenDTO } from "../../dto/UserToken.dto"
 
-export class LoginUserWithTokenUseCase extends BaseUseCase {
+export class RefreshTokenUseCase extends BaseUseCase {
   constructor(
     resources: Resources,
     private readonly repository: IUserRepository,
@@ -15,16 +16,17 @@ export class LoginUserWithTokenUseCase extends BaseUseCase {
   }
 
   override async execute(token: any): Promise<Result> {
-    const result = new ResultData<ISession>()
+    const result = new ResultData<UserTokenDTO>()
 
     if (token && typeof token === "string" && this.authProvider.verifyJWT(token, true)) {
       const sessionInput = this.authProvider.decodeJWT(token)
 
       const user = await this.repository.fetchBy({ email: sessionInput.email })
-      if (user && user.token === token) {
-        const refreshSession = this.authProvider.getJWT({ uid: sessionInput.uid, email: sessionInput.email }, false)
+      if (user && user.refreshToken === token) {
+        const accessToken = this.authProvider.getJWT({ uid: sessionInput.uid, email: sessionInput.email }, false)
         result.setMessage(this.resources.get(strings.USER_ALREADY_LOGGED_IN), 200)
-        result.data = refreshSession
+        const userDto = new UserTokenDTO(accessToken, user)
+        result.data = userDto
         return result
       }
     }

@@ -1,13 +1,14 @@
 import { BaseUseCase } from "../../../../shared/useCases/BaseUseCase"
 import { Result, ResultData } from "../../../../shared/useCases/BaseUseCase"
-import { ISession } from "../../../../../domain/session/ISession"
-import { IUserRepository } from "../../providerContracts/IUser.repository"
+import { IUserRepository } from "../../../users/providerContracts/IUser.repository"
 import { CredentialDTO } from "../../dto/Credential.dto"
 import { User } from "../../../../../domain/user/User"
 import { IAuthProvider } from "../../providerContracts/IAuth.provider"
 import { strings, Resources } from "../../../../shared/locals"
+import { UserTokenDTO } from "../../dto/UserToken.dto"
+import { URLConstraint } from "../../../../shared/settings/Constraints"
 
-export class LoginUserDefaultUseCase extends BaseUseCase {
+export class LoginUserUseCase extends BaseUseCase {
   constructor(
     resources: Resources,
     private readonly repository: IUserRepository,
@@ -16,7 +17,7 @@ export class LoginUserDefaultUseCase extends BaseUseCase {
   }
 
   override async execute(data: any): Promise<Result> {
-    const result = new ResultData<ISession>()
+    const result = new ResultData<UserTokenDTO>()
 
     const credentialDTO = CredentialDTO.fromJSON(data)
     if (!credentialDTO.validate(result, this.resources)) return result
@@ -24,10 +25,10 @@ export class LoginUserDefaultUseCase extends BaseUseCase {
     const user = await this.repository.fetchBy({ email: credentialDTO.email })
     if (
       !this.authenticateUser(result, credentialDTO, user) ||
-      !await this.createLongSection(result, user!, credentialDTO)
+      !await this.createRefreshToken(result, user!, credentialDTO)
     ) return result
 
-    this.createRefreshSection(result, user!, credentialDTO)
+    this.createAccessToken(result, user!, credentialDTO)
     return result
   }
 
@@ -38,14 +39,14 @@ export class LoginUserDefaultUseCase extends BaseUseCase {
     return false
   }
 
-  async createLongSection(result: ResultData<ISession>, user: User, credentialDTO: CredentialDTO): Promise<boolean> {
-    const { token } = this.authProvider.getJWT({ uid: user.uid!, email: credentialDTO.email }, true)
-    user.token = token
+  async createRefreshToken(result: ResultData<UserTokenDTO>, user: User, credentialDTO: CredentialDTO): Promise<boolean> {
+    const { token } = this.authProvider.getJWT({ uid: user.id!, email: credentialDTO.email }, true)
+    user.refreshToken = token
     const isUpdated = await this.repository.update(user)
 
 
     if (isUpdated) {
-      result.cookie = { name: "SESSION_TOKEN", value: token }
+      result.cookie = { name: "NODE_A2_REFRESH_TOKEN", value: token }
       return true
     } else {
       result.setError(this.resources.get(strings.SOMETHING_WAS_WRONG), 500)
@@ -53,10 +54,11 @@ export class LoginUserDefaultUseCase extends BaseUseCase {
     }
   }
 
-  createRefreshSection(result: ResultData<ISession>, user: User, credentialDTO: CredentialDTO): void {
-    const session = this.authProvider.getJWT({ uid: user.uid!, email: credentialDTO.email }, false)
+  createAccessToken(result: ResultData<UserTokenDTO>, user: User, credentialDTO: CredentialDTO): void {
+    const accessToken = this.authProvider.getJWT({ uid: user.id!, email: credentialDTO.email }, false)
 
-    result.setMessage(this.resources.get(strings.LOGIN_SUCESSFUL), 200)
-    result.data = session
+    result.setMessage(this.resources.get(strings.LOGIN_SUCESSFUL), 200, URLConstraint.Users.Refresh.address)
+    const userDto = new UserTokenDTO(accessToken, user)
+    result.data = userDto
   }
 }

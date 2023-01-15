@@ -1,8 +1,9 @@
 import { beforeAll, describe, expect, it } from "vitest"
-import { RegisterUserUseCase } from "../../../../../../src/application/modules/users/useCases/register"
+import { RegisterUserUseCase } from "."
 import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
 import { AuthProvider } from "../../../../../adapters/providers/Auth.provider"
 import { createResource, plurals, strings } from "../../../../shared/locals"
+import { URLConstraint } from "../../../../shared/settings/Constraints"
 
 describe("when try to register user", () => {
   let registerUseCase: RegisterUserUseCase
@@ -26,6 +27,7 @@ describe("when try to register user", () => {
     expect(result.message).toBe(registerUseCase.resources.get(strings.USER_CREATED))
     expect(result.statusCode).toBe(201)
     expect(result.isSucess).toBeTruthy()
+    expect(result.next).toBe(URLConstraint.Users.SignIn.address)
   })
 
   it("should return a 400 error if user email was invalid", async () => {
@@ -41,6 +43,7 @@ describe("when try to register user", () => {
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_EMAIL))
     expect(result.statusCode).toBe(400)
     expect(result.isSucess).toBeFalsy()
+    expect(result.next).toBeUndefined()
   })
 
   it("should return a 400 error if user password has less than 6 characters", async () => {
@@ -56,6 +59,7 @@ describe("when try to register user", () => {
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_PASSWORD))
     expect(result.statusCode).toBe(400)
     expect(result.isSucess).toBeFalsy()
+    expect(result.next).toBeUndefined()
   })
 
   it("should return status 403 if password has only lower case letters", async () => {
@@ -71,6 +75,7 @@ describe("when try to register user", () => {
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_PASSWORD))
     expect(result.statusCode).toBe(400)
     expect(result.isSucess).toBeFalsy()
+    expect(result.next).toBeUndefined()
   })
 
   it("should return a 400 error if user gender was invalid", async () => {
@@ -86,6 +91,7 @@ describe("when try to register user", () => {
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_GENDER))
     expect(result.statusCode).toBe(400)
     expect(result.isSucess).toBeFalsy()
+    expect(result.next).toBeUndefined()
   })
 
   it("should return a 403 error if user already exists", async () => {
@@ -102,12 +108,15 @@ describe("when try to register user", () => {
     expect(result.error).toBeUndefined()
     expect(result.statusCode).toBe(201)
     expect(result.isSucess).toBeTruthy()
+    expect(result.next).toBe(URLConstraint.Users.SignIn.address)
+
 
     const result2 = await createUser()
     expect(result2.error).toBe(registerUseCase.resources.get(strings.USER_ALREADY_EXISTS))
     expect(result2.message).toBeUndefined()
     expect(result2.statusCode).toBe(409)
     expect(result2.isSucess).toBeFalsy()
+    expect(result2.next).toBeUndefined()
   })
 
   it("should return a 400 error if any attribute was missing", async () => {
@@ -120,5 +129,6 @@ describe("when try to register user", () => {
     expect(result.error).toBe(registerUseCase.resources.getWithParams(plurals.MISSING_ATRIBUTES, "lastName: string, gender: string, password: string"))
     expect(result.statusCode).toBe(400)
     expect(result.isSucess).toBeFalsy()
+    expect(result.next).toBeUndefined()
   })
 })

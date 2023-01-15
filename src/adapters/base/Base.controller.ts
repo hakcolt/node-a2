@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response, Router } from "express"
-import { LocaleType } from "../../application/shared/locals"
 import { Result, ResultData } from "../../application/shared/useCases/BaseUseCase"
 import { IRequest } from "./context/IRequest"
 
@@ -9,13 +8,16 @@ export abstract class BaseController {
   abstract initializeRoutes(router: Router): void
 
   getResultToResponse(res: Response, result: Result): Result {
-    if (result.isSucess && result instanceof ResultData && result.cookie) {
+    if (result.isSucess && result instanceof ResultData) {
       const cookie = result.cookie
-      res.cookie(cookie.name, cookie.value)
+      if (cookie) res.cookie(cookie.name, cookie.value)
 
       const tempResult = new ResultData()
-      tempResult.setMessage(result.message, result.statusCode)
-      tempResult.data = result.data
+      tempResult.setMessage(result.message, result.statusCode, result.next)
+
+      const data = result.data
+      if(data) tempResult.data = data
+
       result = tempResult
     }
     return result

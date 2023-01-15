@@ -1,11 +1,12 @@
 import { Gender } from "./Gender.enum"
 
 export interface IUser {
-  uid: string | null
-  token: string | null
+  id: string | null
+  refreshToken: string | null
   firstName: string
   lastName: string
   email: string
+  imageUrl: string | null
   gender: string
   password: string
   verified: boolean

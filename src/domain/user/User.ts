@@ -1,9 +1,10 @@
 export class User {
-  uid: string
-  token: string | null
+  id: string
+  refreshToken: string | null
   firstName: string
   lastName: string
   email: string
+  imageUrl: string | null
   gender: string
   password: string
   verified: boolean

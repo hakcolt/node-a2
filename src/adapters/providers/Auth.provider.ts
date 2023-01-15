@@ -1,7 +1,7 @@
-import { IAuthProvider } from "../../application/modules/users/providerContracts/IAuth.provider"
+import { IAuthProvider } from "../../application/modules/auth/providerContracts/IAuth.provider"
 import jwt from "jsonwebtoken"
 import { AppSettings } from "../../application/shared/settings/AppSettings"
-import { ISession, ISessionInput } from "../../domain/session/ISession"
+import { AccessToken, ISessionInput } from "../../domain/session/AccessToken"
 import bcrypt from "bcrypt"
 
 export class AuthProvider implements IAuthProvider {
@@ -13,9 +13,9 @@ export class AuthProvider implements IAuthProvider {
     return bcrypt.compareSync(password, passwordEncrypted)
   }
 
-  getJWT({ uid, email }: ISessionInput, longSession: boolean): ISession {
-    const expirationTime = longSession ? AppSettings.JWT_LONG_SESSION_TIME : AppSettings.JWT_REFRESH_SESSION_TIME
-    const token = jwt.sign({ uid, email }, longSession ? AppSettings.JWT_LONG_SESSION_KEY : AppSettings.JWT_REFRESH_SESSION_KEY, {
+  getJWT({ uid, email }: ISessionInput, refreshToken: boolean): AccessToken {
+    const expirationTime = refreshToken ? AppSettings.JWT_REFRESH_TOKEN_TIME : AppSettings.JWT_ACCESS_TOKEN_TIME
+    const token = jwt.sign({ uid, email }, refreshToken ? AppSettings.JWT_REFRESH_TOKEN_KEY : AppSettings.JWT_ACCESS_TOKEN_KEY, {
       expiresIn: expirationTime
     })
 
@@ -23,16 +23,15 @@ export class AuthProvider implements IAuthProvider {
     expiresAt.setTime(expiresAt.getTime() + expirationTime * 1000)
 
     return {
-      email,
       token,
       createdAt: new Date().toISOString(),
       expiresAt: expiresAt.toISOString()
     }
   }
 
-  verifyJWT(token: string, longSession: boolean): boolean {
+  verifyJWT(token: string, refreshToken: boolean): boolean {
     try {
-      return !!jwt.verify(token, longSession ? AppSettings.JWT_LONG_SESSION_KEY : AppSettings.JWT_REFRESH_SESSION_KEY)
+      return !!jwt.verify(token, refreshToken ? AppSettings.JWT_REFRESH_TOKEN_KEY : AppSettings.JWT_ACCESS_TOKEN_KEY)
     } catch (e) { return false }
   }
 

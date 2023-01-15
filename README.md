@@ -466,7 +466,7 @@ The clean architecture is very clear in its rules and dictates that the adapter 
 
 TypeScript's strict mode is quite useful because it helps you maintain the type safety of your application making the development stage of your solution more controlled and thus avoiding the possible errors that not having this option enabled can bring.
 
-This option is enabled by default in NodeTskeleton and is managed in the **tsconfig.json** file of your solution, but if you are testing and don't want to have headaches you can disable it.
+This option is enabled by default in Node A2 and is managed in the **tsconfig.json** file of your solution, but if you are testing and don't want to have headaches you can disable it.
 
 ```json
   "strict": true,

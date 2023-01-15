@@ -1,11 +1,11 @@
-import { User } from "../../../../../domain/user/User"
 import { IUserRepository } from "../../providerContracts/IUser.repository"
 import { BaseUseCase } from "../../../../shared/useCases/BaseUseCase"
 import { IUserDTO, UserDTO } from "../../dto/User.dto"
 import { Result } from "../../../../shared/useCases/BaseUseCase"
-import { IAuthProvider } from "../../providerContracts/IAuth.provider"
-import { LocaleType, Resources, strings } from "../../../../shared/locals"
+import { IAuthProvider } from "../../../auth/providerContracts/IAuth.provider"
+import { Resources, strings } from "../../../../shared/locals"
 import { IUser } from "../../../../../domain/user/IUser"
+import { URLConstraint } from "../../../../shared/settings/Constraints"
 
 export class RegisterUserUseCase extends BaseUseCase {
   constructor(
@@ -40,7 +40,7 @@ export class RegisterUserUseCase extends BaseUseCase {
     const user = await this.repository.create(data)
 
     if (user) {
-      result.setMessage(this.resources.get(strings.USER_CREATED), 201)
+      result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstraint.Users.SignIn.address)
     } else result.setError(this.resources.get(strings.USER_ALREADY_EXISTS), 409)
   }
 }

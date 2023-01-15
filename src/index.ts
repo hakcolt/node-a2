@@ -3,8 +3,9 @@ import { AppWrapper } from "./infrastructure/app/AppWrapper"
 import { HttpServer } from "./infrastructure/app/server/HttpServer"
 
 import userController from "./adapters/controllers/User.controller"
+import authController from "./adapters/controllers/Auth.controller"
 
-const controllers: BaseController[] = [userController]
+const controllers: BaseController[] = [userController, authController]
 
 const app = new AppWrapper(controllers)
 const server = new HttpServer(app)

@@ -17,13 +17,13 @@ export default {
   },
   Security: {
     JWT: {
-      LongSession: {
-        SecretKey: process.env.JWT_LONG_SESSION_KEY || "1234",
-        ExpiresInSeconds: parseInt(process.env.JWT_LONG_SESSION_TIME_IN_SECONDS as string) || 604800
+      RefreshToken: {
+        SecretKey: process.env.JWT_REFRESH_TOKEN_KEY || "1234",
+        ExpiresInSeconds: parseInt(process.env.JWT_REFRESH_TOKEN_TIME_IN_SECONDS as string) || 2592000
       },
-      RefreshSession: {
-        SecretKey: process.env.JWT_REFRESH_SESSION_KEY || "1234",
-        ExpiresInSeconds: parseInt(process.env.JWT_REFRESH_SESSION_TIME_IN_SECONDS as string) || 21600
+      AccessToken: {
+        SecretKey: process.env.JWT_ACCESS_TOKEN_KEY || "1234",
+        ExpiresInSeconds: parseInt(process.env.JWT_ACCESS_TOKEN_TIME_IN_SECONDS as string) || 3600
       }
     }
   }
