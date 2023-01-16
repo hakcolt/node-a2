@@ -4,7 +4,6 @@ import { BaseUseCase } from "../../../../shared/useCases/BaseUseCase"
 import { Result, ResultData } from "../../../../shared/useCases/BaseUseCase"
 import { IAuthProvider } from "../../providerContracts/IAuth.provider"
 import { IUserRepository } from "../../../users/providerContracts/IUser.repository"
-import { UserTokenDTO } from "../../dto/UserToken.dto"
 
 export class RefreshTokenUseCase extends BaseUseCase {
   constructor(
@@ -16,17 +15,16 @@ export class RefreshTokenUseCase extends BaseUseCase {
   }
 
   override async execute(token: any): Promise<Result> {
-    const result = new ResultData<UserTokenDTO>()
+    const result = new ResultData<AccessToken>()
 
     if (token && typeof token === "string" && this.authProvider.verifyJWT(token, true)) {
-      const sessionInput = this.authProvider.decodeJWT(token)
+      const tokenArgs = this.authProvider.decodeJWT(token)
 
-      const user = await this.repository.fetchBy({ email: sessionInput.email })
+      const user = await this.repository.fetchBy({ id: tokenArgs.id })
       if (user && user.refreshToken === token) {
-        const accessToken = this.authProvider.getJWT({ uid: sessionInput.uid, email: sessionInput.email }, false)
+        const accessToken = this.authProvider.getJWT({ id: tokenArgs.id, email: tokenArgs.email }, false)
         result.setMessage(this.resources.get(strings.USER_ALREADY_LOGGED_IN), 200)
-        const userDto = new UserTokenDTO(accessToken, user)
-        result.data = userDto
+        result.data = accessToken
         return result
       }
     }

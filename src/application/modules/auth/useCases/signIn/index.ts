@@ -40,13 +40,13 @@ export class LoginUserUseCase extends BaseUseCase {
   }
 
   async createRefreshToken(result: ResultData<UserTokenDTO>, user: User, credentialDTO: CredentialDTO): Promise<boolean> {
-    const { token } = this.authProvider.getJWT({ uid: user.id!, email: credentialDTO.email }, true)
+    const { token, expiresAt } = this.authProvider.getJWT({ id: user.id!, email: credentialDTO.email }, true)
     user.refreshToken = token
     const isUpdated = await this.repository.update(user)
 
 
     if (isUpdated) {
-      result.cookie = { name: "NODE_A2_REFRESH_TOKEN", value: token }
+      result.cookie = { name: "nodeA2.refreshToken", value: token, expires: new Date(expiresAt) }
       return true
     } else {
       result.setError(this.resources.get(strings.SOMETHING_WAS_WRONG), 500)
@@ -55,7 +55,7 @@ export class LoginUserUseCase extends BaseUseCase {
   }
 
   createAccessToken(result: ResultData<UserTokenDTO>, user: User, credentialDTO: CredentialDTO): void {
-    const accessToken = this.authProvider.getJWT({ uid: user.id!, email: credentialDTO.email }, false)
+    const accessToken = this.authProvider.getJWT({ id: user.id!, email: credentialDTO.email }, false)
 
     result.setMessage(this.resources.get(strings.LOGIN_SUCESSFUL), 200, URLConstraint.Users.Refresh.address)
     const userDto = new UserTokenDTO(accessToken, user)

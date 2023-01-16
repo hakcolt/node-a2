@@ -30,7 +30,7 @@ const db: DB = {
       "email": "test@hakcolt.com",
       "imageUrl": null,
       "gender": "Male",
-      "password": "$2a$10$0i9MC7BQCPtuoYxa0MVd0uOTFz.ogf9QROXZx9W7v.NtP0lxTml/.",
+      "password": "$2a$10$ozAIe9m1gTug/4E/2Fe.PeHCMd7KNSHHsDGaY0IyMhDzGxbFLpHxy",
       "createdAt": "1856-06-10T18:30:51.876-05:00",
       "verified": false
     }

@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../providerContracts/IUser.repository"
 import { BaseUseCase } from "../../../../shared/useCases/BaseUseCase"
-import { IUserDTO, UserDTO } from "../../dto/User.dto"
+import { UserDTO, UserInput } from "../../dto/User.dto"
 import { Result } from "../../../../shared/useCases/BaseUseCase"
 import { IAuthProvider } from "../../../auth/providerContracts/IAuth.provider"
 import { Resources, strings } from "../../../../shared/locals"
@@ -14,13 +14,13 @@ export class RegisterUserUseCase extends BaseUseCase {
     private readonly authProvider: IAuthProvider
   ) {
     super(resources)
-   }
+  }
 
-  override async execute(data: any): Promise<Result> {    
+  override async execute(data: any): Promise<Result> {
     const result = new Result()
-    const userDTO: UserDTO = UserDTO.fromJSON(data as IUserDTO)
+    const userDTO: UserDTO = UserDTO.fromJSON(data as UserInput)
 
-    if (!userDTO.validate(result, this.resources)) return result
+    if (!userDTO.validateInputValues(result, this.resources)) return result
 
     const hasUser = await this.repository.fetchBy({ email: userDTO.email })
 
@@ -39,8 +39,7 @@ export class RegisterUserUseCase extends BaseUseCase {
   async createUser(result: Result, data: IUser) {
     const user = await this.repository.create(data)
 
-    if (user) {
-      result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstraint.Users.SignIn.address)
-    } else result.setError(this.resources.get(strings.USER_ALREADY_EXISTS), 409)
+    if (user) result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstraint.Users.SignIn.address)
+    else result.setError(this.resources.get(strings.USER_ALREADY_EXISTS), 409)
   }
 }

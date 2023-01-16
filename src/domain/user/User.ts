@@ -1,4 +1,6 @@
-export class User {
+import { IUser } from "./IUser"
+
+export class User implements IUser {
   id: string
   refreshToken: string | null
   firstName: string

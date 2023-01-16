@@ -1,8 +1,9 @@
 import { IAuthProvider } from "../../application/modules/auth/providerContracts/IAuth.provider"
 import jwt from "jsonwebtoken"
 import { AppSettings } from "../../application/shared/settings/AppSettings"
-import { AccessToken, ISessionInput } from "../../domain/session/AccessToken"
+import { AccessToken } from "../../domain/session/AccessToken"
 import bcrypt from "bcrypt"
+import { TokenArgs } from "../../domain/session/TokenArgs"
 
 export class AuthProvider implements IAuthProvider {
   encryptPassword(data: string): string {
@@ -13,9 +14,9 @@ export class AuthProvider implements IAuthProvider {
     return bcrypt.compareSync(password, passwordEncrypted)
   }
 
-  getJWT({ uid, email }: ISessionInput, refreshToken: boolean): AccessToken {
+  getJWT({ id, email }: TokenArgs, refreshToken: boolean): AccessToken {
     const expirationTime = refreshToken ? AppSettings.JWT_REFRESH_TOKEN_TIME : AppSettings.JWT_ACCESS_TOKEN_TIME
-    const token = jwt.sign({ uid, email }, refreshToken ? AppSettings.JWT_REFRESH_TOKEN_KEY : AppSettings.JWT_ACCESS_TOKEN_KEY, {
+    const token = jwt.sign({ id, email }, refreshToken ? AppSettings.JWT_REFRESH_TOKEN_KEY : AppSettings.JWT_ACCESS_TOKEN_KEY, {
       expiresIn: expirationTime
     })
 
@@ -35,8 +36,8 @@ export class AuthProvider implements IAuthProvider {
     } catch (e) { return false }
   }
 
-  decodeJWT(token: string): ISessionInput {
-    return jwt.decode(token) as ISessionInput
+  decodeJWT(token: string): TokenArgs {
+    return jwt.decode(token) as TokenArgs
   }
 
 }

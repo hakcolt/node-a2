@@ -8,15 +8,22 @@ export abstract class BaseController {
   abstract initializeRoutes(router: Router): void
 
   getResultToResponse(res: Response, result: Result): Result {
-    if (result.isSucess && result instanceof ResultData) {
+    if (result.isSuccess && result instanceof ResultData) {
       const cookie = result.cookie
-      if (cookie) res.cookie(cookie.name, cookie.value)
+      if (cookie) {
+        res.cookie(cookie.name, cookie.value, {
+          expires: cookie.expires,
+          sameSite: "none",
+          httpOnly: true,
+          secure: true
+        })
+      }
 
       const tempResult = new ResultData()
       tempResult.setMessage(result.message, result.statusCode, result.next)
 
       const data = result.data
-      if(data) tempResult.data = data
+      if (data) tempResult.data = data
 
       result = tempResult
     }
@@ -29,17 +36,6 @@ export abstract class BaseController {
 
       const resultUpdated = this.getResultToResponse(res, result)
       res.status(resultUpdated.statusCode).json(resultUpdated)
-    } catch (e) { next(e) }
-  }
-
-  async handleMiddleware(res: Response, next: NextFunction, useCase: Promise<Result>) {
-    try {
-      let result = await useCase
-
-      if (result.isSucess) {
-        const resultUpdated = this.getResultToResponse(res, result)
-        res.status(resultUpdated.statusCode).json(resultUpdated)
-      } else next()
     } catch (e) { next(e) }
   }
 }

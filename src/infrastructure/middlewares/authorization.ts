@@ -25,7 +25,10 @@ export function verifyToken(request: Request, res: Response, next: NextFunction)
     const token = authorizationParts?.at(1)
 
     const auth = new AuthProvider()
-    if (tokenType === "Bearer" && token && auth.verifyJWT(token, false)) return next()
+    if (tokenType === "Bearer" && token && auth.verifyJWT(token, false)) {
+      req.userInfo = auth.decodeJWT(token)
+      return next()
+    }
   }
   next(new ApplicationError(req.resources.get(strings.UNAUTHORIZED), 401))
 }

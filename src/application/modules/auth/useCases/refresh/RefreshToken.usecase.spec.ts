@@ -22,15 +22,15 @@ describe("when try refresh access token", () => {
   it("should return status 200 if there is not any problem", async () => {
     const session = auth.getJWT({
       email: "test@hakcolt.com",
-      uid: "9177a65d-6f83-478d-954d-10be5a2df24d"
+      id: "9177a65d-6f83-478d-954d-10be5a2df24d"
     }, true)
     dbMock.users[1].refreshToken = session.token
     const result = await loginUseCase.execute(session.token)
-
+    
     expect(result.error).toBeUndefined()
     expect(result.message).toBe(loginUseCase.resources.get(strings.USER_ALREADY_LOGGED_IN))
     expect(result.statusCode).toBe(200)
-    expect(result.isSucess).toBeTruthy()
+    expect(result.isSuccess).toBeTruthy()
     expect(result.next).toBeUndefined()
   })
 
@@ -40,7 +40,7 @@ describe("when try refresh access token", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.get(strings.NEED_AUTHENTICATION))
     expect(result.statusCode).toBe(403)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -56,7 +56,7 @@ describe("when try refresh access token", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.get(strings.NEED_AUTHENTICATION))
     expect(result.statusCode).toBe(403)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -66,7 +66,7 @@ describe("when try refresh access token", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.get(strings.NEED_AUTHENTICATION))
     expect(result.statusCode).toBe(403)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 })

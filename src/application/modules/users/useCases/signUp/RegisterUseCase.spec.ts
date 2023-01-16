@@ -26,7 +26,7 @@ describe("when try to register user", () => {
     expect(result.error).toBeUndefined()
     expect(result.message).toBe(registerUseCase.resources.get(strings.USER_CREATED))
     expect(result.statusCode).toBe(201)
-    expect(result.isSucess).toBeTruthy()
+    expect(result.isSuccess).toBeTruthy()
     expect(result.next).toBe(URLConstraint.Users.SignIn.address)
   })
 
@@ -42,7 +42,7 @@ describe("when try to register user", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_EMAIL))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -58,7 +58,7 @@ describe("when try to register user", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_PASSWORD))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -74,7 +74,7 @@ describe("when try to register user", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_PASSWORD))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -90,7 +90,7 @@ describe("when try to register user", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_GENDER))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -107,7 +107,7 @@ describe("when try to register user", () => {
     expect(result.message).toBe(registerUseCase.resources.get(strings.USER_CREATED))
     expect(result.error).toBeUndefined()
     expect(result.statusCode).toBe(201)
-    expect(result.isSucess).toBeTruthy()
+    expect(result.isSuccess).toBeTruthy()
     expect(result.next).toBe(URLConstraint.Users.SignIn.address)
 
 
@@ -115,7 +115,7 @@ describe("when try to register user", () => {
     expect(result2.error).toBe(registerUseCase.resources.get(strings.USER_ALREADY_EXISTS))
     expect(result2.message).toBeUndefined()
     expect(result2.statusCode).toBe(409)
-    expect(result2.isSucess).toBeFalsy()
+    expect(result2.isSuccess).toBeFalsy()
     expect(result2.next).toBeUndefined()
   })
 
@@ -128,7 +128,7 @@ describe("when try to register user", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(registerUseCase.resources.getWithParams(plurals.MISSING_ATRIBUTES, "lastName: string, gender: string, password: string"))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 })

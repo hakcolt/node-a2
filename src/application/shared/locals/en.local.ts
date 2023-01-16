@@ -15,6 +15,7 @@ export default {
   [strings.UNAUTHORIZED]: "Unauthorized",
   [strings.PAGE_NOT_FOUND]: "Page not found. Verify the request method and the path, and try again.",
   [strings.NEED_AUTHENTICATION]: "Need Authentication",
+  [strings.SUCCESSFUL_OPERATION]: "Successful operation",
 
   [plurals.MISSING_ATRIBUTES]: "Missing attributes: %$s"
 }

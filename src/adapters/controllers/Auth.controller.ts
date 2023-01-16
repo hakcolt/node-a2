@@ -13,11 +13,11 @@ export class AuthController extends BaseController {
 
     const repository = new LocalUserRepository()
     const authProvider = new AuthProvider()
-    const loginService = new RefreshTokenUseCase(req.resources, repository, authProvider)
+    const refreshTokenService = new RefreshTokenUseCase(req.resources, repository, authProvider)
 
-    const token = req.cookies.NODE_A2_REFRESH_TOKEN
+    const token = req.cookies["nodeA2.refreshToken"]
 
-    this.handleResult(res, next, loginService.execute(token))
+    this.handleResult(res, next, refreshTokenService.execute(token))
   }
 
   signIn = async (request: Request, res: Response, next: NextFunction) => {

@@ -28,9 +28,10 @@ export class AppWrapper {
       .use(resources)
     this.router
       .use(cors({
+        credentials: true,
         origin(origin, callback) {
-          if (config.Server.Origins.indexOf(origin!) !== -1 || !origin) // !origin allow REST tools and server-to-server requests
-          callback(null, origin)
+          if (config.Server.Origins.indexOf(origin!) !== -1 || !origin) // "!origin" allow REST tools and server-to-server requests
+            callback(null, origin)
         },
         methods: ["GET", "POST", "PUT"]
       }))

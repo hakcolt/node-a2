@@ -32,7 +32,7 @@ describe("when try to login user with email and password", () => {
     expect(result.error).toBeUndefined()
     expect(result.message).toBe(loginUseCase.resources.get(strings.LOGIN_SUCESSFUL))
     expect(result.statusCode).toBe(200)
-    expect(result.isSucess).toBeTruthy()
+    expect(result.isSuccess).toBeTruthy()
     expect(result).toBeInstanceOf(ResultData)
     expect(result as ResultData<UserTokenDTO>).toHaveProperty(["data", "accessToken", "token"])
     expect(result as ResultData<UserTokenDTO>).toHaveProperty(["data", "user", "id"])
@@ -49,7 +49,7 @@ describe("when try to login user with email and password", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.getWithParams(plurals.MISSING_ATRIBUTES, "email: string"))
     expect(result.statusCode).toBe(400)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -62,7 +62,7 @@ describe("when try to login user with email and password", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.get(strings.EMAIL_PASSWORD_INVALID))
     expect(result.statusCode).toBe(403)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -75,7 +75,7 @@ describe("when try to login user with email and password", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.get(strings.EMAIL_PASSWORD_INVALID))
     expect(result.statusCode).toBe(403)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -88,7 +88,7 @@ describe("when try to login user with email and password", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.get(strings.EMAIL_PASSWORD_INVALID))
     expect(result.statusCode).toBe(403)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 
@@ -101,7 +101,7 @@ describe("when try to login user with email and password", () => {
     expect(result.message).toBeUndefined()
     expect(result.error).toBe(loginUseCase.resources.get(strings.EMAIL_PASSWORD_INVALID))
     expect(result.statusCode).toBe(403)
-    expect(result.isSucess).toBeFalsy()
+    expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
   })
 })
