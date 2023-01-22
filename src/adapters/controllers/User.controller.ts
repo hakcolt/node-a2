@@ -32,10 +32,10 @@ export class UserController extends BaseController {
 
   override initializeRoutes(router: Router) {
     const signUpUrl = URLConstraint.Users.SignUp
-    router[signUpUrl.method](signUpUrl.address, this.signUp)
+    router[signUpUrl.method](signUpUrl.path, this.signUp)
     
     const getUserUrl = URLConstraint.Users.Get
-    router[getUserUrl.method](getUserUrl.address, this.getUser)
+    router[getUserUrl.method](getUserUrl.path, this.getUser)
   }
 }
 

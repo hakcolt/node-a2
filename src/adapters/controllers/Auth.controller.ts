@@ -34,10 +34,10 @@ export class AuthController extends BaseController {
 
   override initializeRoutes(router: Router) {
     const refreshUrl = URLConstraint.Users.Refresh
-    router[refreshUrl.method](refreshUrl.address, this.refresh)
+    router[refreshUrl.method](refreshUrl.path, this.refresh)
     
     const signInUrl = URLConstraint.Users.SignIn
-    router[signInUrl.method](signInUrl.address, this.signIn)
+    router[signInUrl.method](signInUrl.path, this.signIn)
   }
 }
 

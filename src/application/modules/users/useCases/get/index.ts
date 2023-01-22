@@ -21,7 +21,7 @@ export class GetUserUseCase extends BaseUseCase {
     if (!user) {
       result.setError(
         this.resources.get(strings.NEED_AUTHENTICATION),
-        403, URLConstraint.Users.SignIn.address
+        403, URLConstraint.Users.SignIn.path
       )
       return result
     }

@@ -17,5 +17,6 @@ export default {
   [strings.NEED_AUTHENTICATION]: "Need Authentication",
   [strings.SUCCESSFUL_OPERATION]: "Successful operation",
 
-  [plurals.MISSING_ATRIBUTES]: "Missing attributes: %$s"
+  [plurals.MISSING_ATRIBUTES]: "Missing attributes: %$s",
+  [plurals.SERVICE_ONLINE]: "Service online at %$s with remote request status %$s"
 }

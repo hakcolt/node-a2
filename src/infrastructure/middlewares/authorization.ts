@@ -6,9 +6,10 @@ import { strings } from "../../application/shared/locals"
 import { URLConstraint } from "../../application/shared/settings/Constraints"
 
 const whiteList = [
-  URLConstraint.Users.SignIn.address,
-  URLConstraint.Users.SignUp.address,
-  URLConstraint.Users.Refresh.address
+  URLConstraint.Users.SignIn.path,
+  URLConstraint.Users.SignUp.path,
+  URLConstraint.Users.Refresh.path,
+  URLConstraint.Health.Ping.path
 ]
 
 export function verifyToken(request: Request, res: Response, next: NextFunction) {
