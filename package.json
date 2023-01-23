@@ -7,7 +7,8 @@
     "build": "rm -rf dist/**/* && tsc --sourceMap false",
     "test": "vitest",
     "coverage": "vitest --coverage",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "start": "node ./dist/index.js"
   },
   "repository": "https://github.com/hakcolt/ts-template.git",
   "author": "Igor Hakcolt",

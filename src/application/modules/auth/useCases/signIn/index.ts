@@ -57,7 +57,7 @@ export class LoginUserUseCase extends BaseUseCase {
   createAccessToken(result: ResultData<UserTokenDTO>, user: User, credentialDTO: CredentialDTO): void {
     const accessToken = this.authProvider.getJWT({ id: user.id!, email: credentialDTO.email }, false)
 
-    result.setMessage(this.resources.get(strings.LOGIN_SUCESSFUL), 200, URLConstraint.Users.Refresh.address)
+    result.setMessage(this.resources.get(strings.LOGIN_SUCESSFUL), 200, URLConstraint.Users.Refresh.path)
     const userDto = new UserTokenDTO(accessToken, user)
     result.data = userDto
   }

@@ -17,5 +17,6 @@ export const strings = {
 }
 
 export const plurals = {
-  MISSING_ATRIBUTES: "MISSING_ATTRIBUTES"
+  MISSING_ATRIBUTES: "MISSING_ATTRIBUTES",
+  SERVICE_ONLINE: "SERVICE_ONLINE"
 }

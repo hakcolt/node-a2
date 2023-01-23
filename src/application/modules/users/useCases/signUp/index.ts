@@ -39,7 +39,7 @@ export class RegisterUserUseCase extends BaseUseCase {
   async createUser(result: Result, data: IUser) {
     const user = await this.repository.create(data)
 
-    if (user) result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstraint.Users.SignIn.address)
+    if (user) result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstraint.Users.SignIn.path)
     else result.setError(this.resources.get(strings.USER_ALREADY_EXISTS), 409)
   }
 }
