@@ -6,6 +6,11 @@ export class URLConstraint {
     Get: { method: "get", path: "/v1/users/get" }
   }
 
+  static Links = {
+    List: { method: "get", path: "/v1/links" },
+    Create: { method: "post", path: "/v1/links" }
+  }
+
   static Health = {
     Ping: { method: "get", path: "/v1/ping" }
   }

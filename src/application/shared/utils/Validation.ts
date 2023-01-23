@@ -4,6 +4,14 @@ import { Validation as Va } from "@hakcolt/validator"
 export class Validation {
   private validator = new Va()
 
+  validatePath(path: string): boolean {
+    return this.validator.validateURLPath(path)
+  }
+
+  validateUrl(url: string): string | null {
+    return this.validator.validateUrl(url)
+  }
+
   validateObject(obj: any, attributesParam: string[]): string[] {
     return this.validator.validateObject(obj, attributesParam)
   }
@@ -16,7 +24,6 @@ export class Validation {
   validateEmail(email: string): boolean {
     return this.validator.validateEmail(email)
   }
-
 
   /**
    * The password must contain least at one upper case and one lower case letter, one digit and a length of least at 8 characters 

@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest"
 import { RegisterUserUseCase } from "."
-import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
+import { LocalUserRepository } from "../../../../../adapters/repositories/local/User.repository"
 import { AuthProvider } from "../../../../../adapters/providers/Auth.provider"
 import { createResource, plurals, strings } from "../../../../shared/locals"
 import { URLConstraint } from "../../../../shared/settings/Constraints"
@@ -27,7 +27,7 @@ describe("when try to register user", () => {
     expect(result.message).toBe(registerUseCase.resources.get(strings.USER_CREATED))
     expect(result.statusCode).toBe(201)
     expect(result.isSuccess).toBeTruthy()
-    expect(result.next).toBe(URLConstraint.Users.SignIn.address)
+    expect(result.next).toBe(URLConstraint.Users.SignIn.path)
   })
 
   it("should return a 400 error if user email was invalid", async () => {
@@ -108,7 +108,7 @@ describe("when try to register user", () => {
     expect(result.error).toBeUndefined()
     expect(result.statusCode).toBe(201)
     expect(result.isSuccess).toBeTruthy()
-    expect(result.next).toBe(URLConstraint.Users.SignIn.address)
+    expect(result.next).toBe(URLConstraint.Users.SignIn.path)
 
 
     const result2 = await createUser()

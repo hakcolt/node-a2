@@ -1,3 +1,4 @@
+import { Link } from "../link/Link"
 import { Gender } from "./Gender.enum"
 
 export interface IUser {
@@ -11,4 +12,5 @@ export interface IUser {
   password: string
   verified: boolean
   createdAt: string
+  links: Link[] | null
 }

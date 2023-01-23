@@ -49,11 +49,12 @@ export class UserDTO {
 
   static fromUser(data: User): UserDTO {
     const userDto = new UserDTO()
+    userDto.id = data.id
     userDto.firstName = data.firstName
     userDto.lastName = data.lastName
     userDto.email = data.email?.toLowerCase()
-    userDto.imageUrl = data.imageUrl
     userDto.gender = data.gender?.toLowerCase()
+    userDto.imageUrl = data.imageUrl
     userDto.password = data.password
     userDto.verified = data.verified
     userDto.createdAt = data.createdAt

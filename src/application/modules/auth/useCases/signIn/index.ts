@@ -41,10 +41,8 @@ export class LoginUserUseCase extends BaseUseCase {
 
   async createRefreshToken(result: ResultData<UserTokenDTO>, user: User, credentialDTO: CredentialDTO): Promise<boolean> {
     const { token, expiresAt } = this.authProvider.getJWT({ id: user.id!, email: credentialDTO.email }, true)
-    user.refreshToken = token
-    const isUpdated = await this.repository.update(user)
 
-
+    const isUpdated = await this.repository.update({ id: user.id }, { refreshToken: token })
     if (isUpdated) {
       result.cookie = { name: "nodeA2.refreshToken", value: token, expires: new Date(expiresAt) }
       return true

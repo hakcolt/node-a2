@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest"
 import { RefreshTokenUseCase } from "."
 import { AuthProvider } from "../../../../../adapters/providers/Auth.provider"
-import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
+import { LocalUserRepository } from "../../../../../adapters/repositories/local/User.repository"
 import config from "../../../../../infrastructure/config"
 import dbMock from "../../../../../infrastructure/databases/local/db.mock"
 import { createResource, strings } from "../../../../shared/locals"

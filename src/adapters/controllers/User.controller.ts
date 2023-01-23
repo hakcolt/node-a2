@@ -1,16 +1,16 @@
 import { BaseController, IRequest } from "../base/Base.controller"
 import { RegisterUserUseCase } from "../../application/modules/users/useCases/signUp"
-import { LocalUserRepository } from "../repositories/local/user/User.repository"
 import { AuthProvider } from "../providers/Auth.provider"
 import { NextFunction, Request, Response, Router } from "express"
 import { URLConstraint } from "../../application/shared/settings/Constraints"
 import { GetUserUseCase } from "../../application/modules/users/useCases/get"
+import { RemoteUserRepository } from "../repositories/remote/User.repository"
 
 export class UserController extends BaseController {
   signUp = async (request: Request, res: Response, next: NextFunction) => {
     const req = request as IRequest
 
-    const repository = new LocalUserRepository()
+    const repository = new RemoteUserRepository()
     const authProvider = new AuthProvider()
     const registerService = new RegisterUserUseCase(req.resources, repository, authProvider)
 
@@ -22,7 +22,7 @@ export class UserController extends BaseController {
   getUser = async (request: Request, res: Response, next: NextFunction) => {
     const req = request as IRequest
 
-    const repository = new LocalUserRepository()
+    const repository = new RemoteUserRepository()
     const registerService = new GetUserUseCase(req.resources, repository)
 
     const tokenArgs = req.userInfo

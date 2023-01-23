@@ -1,3 +1,4 @@
+import { Link } from "../link/Link"
 import { IUser } from "./IUser"
 
 export class User implements IUser {
@@ -11,4 +12,5 @@ export class User implements IUser {
   password: string
   verified: boolean
   createdAt: string
+  links: Link[] | null
 }
