@@ -19,12 +19,10 @@ export class RemoteLinkRepository implements ILinkRepository {
       return null
     }
   }
-  
+
   async fetchBy(attributes: Record<string, any>): Promise<Link | null> {
     try {
-      const link = await prisma.link.findUnique({
-        where: attributes
-      })
+      const link = await prisma.link.findUnique({ where: attributes })
       return link as Link
     } catch (e) {
       if (AppSettings.SERVER_MODE === "development") console.log(e)
@@ -46,7 +44,6 @@ export class RemoteLinkRepository implements ILinkRepository {
 
   async create(data: ILink): Promise<Link | null> {
     try {
-      console.log(data)
       const link = await prisma.link.create({
         data: {
           name: data.name,

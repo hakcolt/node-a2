@@ -1,4 +1,3 @@
-import { BaseController } from "./adapters/base/Base.controller"
 import { AppWrapper } from "./infrastructure/app/AppWrapper"
 import { HttpServer } from "./infrastructure/app/server/HttpServer"
 
@@ -7,9 +6,23 @@ import authController from "./adapters/controllers/Auth.controller"
 import healthController from "./adapters/controllers/Health.controller"
 import linkController from "./adapters/controllers/Link.controller"
 
-const controllers: BaseController[] = [userController, authController, linkController, healthController]
+import { Router } from "express"
+import config from "./infrastructure/config"
+import rootController from "./adapters/controllers/Root.controller"
 
-const app = new AppWrapper(controllers)
+const root = {
+  path: "/",
+  router: Router(),
+  controllers: [rootController]
+}
+
+const api = {
+  path: config.Server.ApiPath,
+  router: Router(),
+  controllers: [userController, authController, linkController, healthController]
+}
+
+const app = new AppWrapper(root, api)
 const server = new HttpServer(app)
 server.start()
 

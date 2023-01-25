@@ -14,7 +14,7 @@ export default {
   [strings.NEED_AUTHENTICATION]: "Need Authentication",
   [strings.SUCCESSFUL_OPERATION]: "Successful operation",
   [strings.EMPTY_LIST]: "Empty List",
-  [strings.USER_NOT_FOUND]: "User not found",
+  [strings.NOT_FOUND]: "Not found",
   
   [plurals.MISSING_ATRIBUTES]: "Missing attributes: %$s",
   [plurals.INVALID_ATTRIBUTES]: "Invalid attributes: %$s",

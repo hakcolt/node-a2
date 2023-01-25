@@ -7,7 +7,7 @@ if (!nodeEnv || nodeEnv === "development") console.log("Running in dev mode")
 export default {
   Server: {
     Mode: nodeEnv || "development",
-    Root: process.env.SERVER_ROOT || "/api",
+    ApiPath: process.env.SERVER_API_PATH || "/api",
     Host: process.env.SERVER_HOST || "localhost",
     Port: process.env.SERVER_PORT || 3000,
     Origins:

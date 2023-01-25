@@ -1,5 +1,4 @@
-import { Gender } from "../../../../domain/user/Gender.enum"
-import { plurals, Resources, strings } from "../../../shared/locals"
+import { plurals, Resources } from "../../../shared/locals"
 import { Result } from "../../../shared/useCases/BaseUseCase"
 import validation from "../../../shared/utils/Validation"
 
@@ -12,14 +11,14 @@ export class LinkInput {
 
 export class LinkDTO {
   id: string | null
-  name: string | null
+  name: string | undefined
   path: string
   url: string
   userId: string
 
   static fromJSON(data: LinkInput): LinkDTO {
     const linkDto = new LinkDTO()
-    linkDto.name = data.name
+    linkDto.name = data.name ? data.name : undefined
     linkDto.path = data.path?.toLowerCase()
     linkDto.url = data.url?.toLowerCase()
     linkDto.userId = data.userId

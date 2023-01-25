@@ -4,7 +4,7 @@ import { AppSettings } from "../../application/shared/settings/AppSettings"
 import { Result } from "../../application/shared/useCases/BaseUseCase"
 
 export function errorHandler(e: Error, req: Request, res: Response, next: NextFunction) {
-  if (!e) return
+  if (!e) return next()
   if (e instanceof ApplicationError) handleError(res, e)
   else handleNodeError(res, e)
 }

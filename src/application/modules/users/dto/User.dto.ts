@@ -76,12 +76,12 @@ export class UserDTO {
 
     const genders = Object.values(Gender)
     if (!genders.includes(this.gender as Gender)) {
-      result.setError(resources.get(strings.INVALID_GENDER), 400)
+      result.setError(resources.getWithParams(plurals.INVALID_ATTRIBUTES, "gender: string"), 400)
       return false
     }
 
     if (!validation.validateEmail(this.email)) {
-      result.setError(resources.get(strings.INVALID_EMAIL), 400)
+      result.setError(resources.getWithParams(plurals.INVALID_ATTRIBUTES, "email: string"), 400)
       return false
     }
     return true

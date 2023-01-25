@@ -18,10 +18,7 @@ export class ListLinkUseCase extends BaseUseCase {
 
     const link = await this.repository.fetchListBy({ userId: userInfo.id })
     if (!link) {
-      result.setMessage(
-        this.resources.get(strings.EMPTY_LIST),
-        200
-      )
+      result.setMessage(this.resources.get(strings.EMPTY_LIST), 200)
       return result
     }
 

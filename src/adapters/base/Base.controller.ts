@@ -33,9 +33,13 @@ export abstract class BaseController {
   async handleResult(res: Response, next: NextFunction, useCase: Promise<Result>) {
     try {
       let result = await useCase
-
-      const resultUpdated = this.getResultToResponse(res, result)
-      res.status(resultUpdated.statusCode).json(resultUpdated)
+      if (result.statusCode > 300 && result.statusCode < 400) {
+        const resultData = result as ResultData<string>
+        const url = resultData.data
+        return res.status(resultData.statusCode).redirect(url)
+      }
+      const resultFormatted = this.getResultToResponse(res, result)
+      res.status(resultFormatted.statusCode).json(resultFormatted)
     } catch (e) { next(e) }
   }
 }

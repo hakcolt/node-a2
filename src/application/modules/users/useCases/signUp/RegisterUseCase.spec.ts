@@ -40,7 +40,7 @@ describe("when try to register user", () => {
     })
 
     expect(result.message).toBeUndefined()
-    expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_EMAIL))
+    expect(result.error).toBe(registerUseCase.resources.getWithParams(plurals.INVALID_ATTRIBUTES, "email: string"))
     expect(result.statusCode).toBe(400)
     expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()
@@ -88,7 +88,7 @@ describe("when try to register user", () => {
     })
 
     expect(result.message).toBeUndefined()
-    expect(result.error).toBe(registerUseCase.resources.get(strings.INVALID_GENDER))
+    expect(result.error).toBe(registerUseCase.resources.getWithParams(plurals.INVALID_ATTRIBUTES, "gender: string"))
     expect(result.statusCode).toBe(400)
     expect(result.isSuccess).toBeFalsy()
     expect(result.next).toBeUndefined()

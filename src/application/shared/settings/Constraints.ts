@@ -14,4 +14,8 @@ export class URLConstraint {
   static Health = {
     Ping: { method: "get", path: "/v1/ping" }
   }
+
+  static Root = {
+    Redirect: { method: "get", path: "/:path" }
+  }
 }
