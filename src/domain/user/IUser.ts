@@ -12,5 +12,4 @@ export interface IUser {
   password: string
   verified: boolean
   createdAt: string
-  links: Link[] | null
 }

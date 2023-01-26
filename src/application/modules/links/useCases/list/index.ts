@@ -3,7 +3,7 @@ import { Result } from "../../../../shared/useCases/BaseUseCase"
 import { Resources, strings } from "../../../../shared/locals"
 import { TokenArgs } from "../../../../../domain/session/TokenArgs"
 import { ILinkRepository } from "../../providerContracts/ILink.repository"
-import { Link } from "@prisma/client"
+import { Link } from "../../../../../domain/link/Link"
 
 export class ListLinkUseCase extends BaseUseCase {
   constructor(
@@ -17,7 +17,7 @@ export class ListLinkUseCase extends BaseUseCase {
     const result = new ResultData<Link[]>()
 
     const link = await this.repository.fetchListBy({ userId: userInfo.id })
-    if (!link) {
+    if (link.length < 1) {
       result.setMessage(this.resources.get(strings.EMPTY_LIST), 200)
       return result
     }

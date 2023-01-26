@@ -26,7 +26,7 @@ export class LinkDTO {
   }
 
   validateInputValues(result: Result, resources: Resources): boolean {
-    const missingAttributes = validation.validateObject(this, ["path:string", "url:string"])
+    const missingAttributes = validation.validateObject(this, ["path:string", "url:string", "userId:string"])
 
     if (missingAttributes.length) {
       result.setError(resources.getWithParams(plurals.MISSING_ATRIBUTES, validation.formatMissingAttributes(missingAttributes)), 400)

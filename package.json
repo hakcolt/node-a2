@@ -8,6 +8,8 @@
     "test": "vitest",
     "coverage": "vitest --coverage",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:generate": "prisma generate",
     "start": "NODE_ENV=production node ./dist/index.js"
   },
   "repository": "https://github.com/hakcolt/ts-template.git",

@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    env_file:
+      - .env
+    command: sh -c "npm run prisma:deploy"
+    ports:
+      - 3000:3000
+    working_dir: /app

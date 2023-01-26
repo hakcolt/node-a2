@@ -25,7 +25,7 @@ export class RegisterUserUseCase extends BaseUseCase {
     const hasUser = await this.repository.fetchBy({ email: userDTO.email })
 
     if (hasUser) {
-      result.setError(this.resources.get(strings.USER_ALREADY_EXISTS), 409)
+      result.setError(this.resources.get(strings.ALREADY_EXISTS), 409)
       return result
     }
     const userData = userDTO.toDomain()
@@ -40,6 +40,6 @@ export class RegisterUserUseCase extends BaseUseCase {
     const user = await this.repository.create(data)
 
     if (user) result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstraint.Users.SignIn.path)
-    else result.setError(this.resources.get(strings.USER_ALREADY_EXISTS), 409)
+    else result.setError(this.resources.get(strings.ALREADY_EXISTS), 409)
   }
 }

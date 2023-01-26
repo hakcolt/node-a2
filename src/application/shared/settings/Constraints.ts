@@ -12,7 +12,7 @@ export class URLConstraint {
   }
 
   static Health = {
-    Ping: { method: "get", path: "/v1/ping" }
+    Ping: { method: "get", path: "/ping" }
   }
 
   static Root = {

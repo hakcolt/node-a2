@@ -12,5 +12,4 @@ export class User implements IUser {
   password: string
   verified: boolean
   createdAt: string
-  links: Link[] | null
 }

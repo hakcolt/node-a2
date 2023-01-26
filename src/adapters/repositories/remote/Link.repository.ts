@@ -30,7 +30,7 @@ export class RemoteLinkRepository implements ILinkRepository {
     }
   }
 
-  async fetchListBy(attributes: Record<string, any>): Promise<Link[] | null> {
+  async fetchListBy(attributes: Record<string, any>): Promise<Link[]> {
     try {
       const links = await prisma.link.findMany({
         where: attributes
@@ -38,7 +38,7 @@ export class RemoteLinkRepository implements ILinkRepository {
       return links as Link[]
     } catch (e) {
       if (AppSettings.SERVER_MODE === "development") console.log(e)
-      return null
+      return []
     }
   }
 

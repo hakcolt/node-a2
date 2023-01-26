@@ -8,7 +8,7 @@ export default {
   [strings.SOMETHING_WAS_WRONG]: "Could not complete the operation. Try again later",
   [strings.EMAIL_PASSWORD_INVALID]: "Email or password incorrect",
   [strings.INVALID_PASSWORD]: "The password must contain least at one upper case letter, one lower case letter, one digit and a length of least at 8 characters",
-  [strings.USER_ALREADY_EXISTS]: "User already exists",
+  [strings.ALREADY_EXISTS]: "Already exists",
   [strings.UNAUTHORIZED]: "Unauthorized",
   [strings.PAGE_NOT_FOUND]: "Page not found. Verify the request method and the path, and try again.",
   [strings.NEED_AUTHENTICATION]: "Need Authentication",

@@ -112,7 +112,7 @@ describe("when try to register user", () => {
 
 
     const result2 = await createUser()
-    expect(result2.error).toBe(registerUseCase.resources.get(strings.USER_ALREADY_EXISTS))
+    expect(result2.error).toBe(registerUseCase.resources.get(strings.ALREADY_EXISTS))
     expect(result2.message).toBeUndefined()
     expect(result2.statusCode).toBe(409)
     expect(result2.isSuccess).toBeFalsy()

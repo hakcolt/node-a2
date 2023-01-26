@@ -2,10 +2,12 @@
 ALTER THE ATRIBUTES WILL IMPACT IN TESTS
 */
 
+import { Link } from "../../../domain/link/Link"
 import { User } from "../../../domain/user/User"
 
 type DB = {
-  users: User[]
+  users: User[],
+  links: Link[]
 }
 
 const db: DB = {
@@ -20,7 +22,7 @@ const db: DB = {
       "gender": "Male",
       "password": "$2a$10$XNLXy4wl6xfpSh.levPhgehU0WqVgB77cLkKEQ8RZ6VKQCpneeg3e",
       "createdAt": "1856-06-10T18:30:51.876-05:00",
-      "verified": true
+      "verified": true,
     },
     {
       "id": "9177a65d-6f83-478d-954d-10be5a2df24d",
@@ -32,7 +34,16 @@ const db: DB = {
       "gender": "Male",
       "password": "$2a$10$ozAIe9m1gTug/4E/2Fe.PeHCMd7KNSHHsDGaY0IyMhDzGxbFLpHxy",
       "createdAt": "1856-06-10T18:30:51.876-05:00",
-      "verified": false
+      "verified": false,
+    }
+  ],
+  "links": [
+    {
+      "id": "8767a65d-6f83-478d-954d-10be5a2df24d",
+      "name": "Linkedin",
+      "path": "/linkedin",
+      "url": "https://linkedin.com/in/hakcolt",
+      "userId": "9177a65d-6f83-478d-954d-10be5a2df24d"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import express, { Express, Router, urlencoded } from "express"
+import express, { Express, Router } from "express"
 import helmet from "helmet"
 import cors from "cors"
 import cookieParser from "cookie-parser"
@@ -43,8 +43,9 @@ export class AppWrapper {
       .use(cors({
         credentials: true,
         origin(origin, callback) {
-          if (config.Server.Origins.indexOf(origin!) !== -1 || !origin) // "!origin" allow REST tools and server-to-server requests
-            callback(null, origin)
+          // if (config.Server.Origins.indexOf(origin!) !== -1 || !origin) // "!origin" allow REST tools and server-to-server requests
+          console.log(origin)
+          callback(null, origin)
         },
         methods: ["GET", "POST", "PUT"]
       }))

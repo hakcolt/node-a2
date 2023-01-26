@@ -8,7 +8,7 @@ import { describe, beforeAll, it, expect } from "vitest"
 
 AppSettings.init(config)
 
-describe("when try refresh access token", () => {
+describe("when try get user", () => {
   let getUserUseCase: GetUserUseCase
   
   beforeAll(() => {
@@ -18,7 +18,7 @@ describe("when try refresh access token", () => {
 
   it("should return status 200 if there is not any problem", async () => {
     const userInfo = {
-      email: "test@hakcolt.com",
+      email: "test@gmail.com",
       id: "e66832e3-fa0c-4502-a1a2-752229249a18"
     }
     const result = await getUserUseCase.execute(userInfo)
