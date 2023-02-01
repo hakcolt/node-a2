@@ -3,7 +3,7 @@ import { BaseUseCase, ResultData } from "../../../../shared/useCases/BaseUseCase
 import { UserDTO, UserOutput } from "../../dto/User.dto"
 import { Result } from "../../../../shared/useCases/BaseUseCase"
 import { Resources, strings } from "../../../../shared/locals"
-import { URLConstraint } from "../../../../shared/settings/Constraints"
+import { URLConstants } from "../../../../shared/settings/Constants"
 import { TokenArgs } from "../../../../../domain/session/TokenArgs"
 
 export class GetUserUseCase extends BaseUseCase {
@@ -21,7 +21,7 @@ export class GetUserUseCase extends BaseUseCase {
     if (!user) {
       result.setError(
         this.resources.get(strings.NEED_AUTHENTICATION),
-        403, URLConstraint.Users.SignIn.path
+        403, URLConstants.Users.SignIn.path
       )
       return result
     }

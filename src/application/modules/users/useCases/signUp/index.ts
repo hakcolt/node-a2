@@ -5,7 +5,7 @@ import { Result } from "../../../../shared/useCases/BaseUseCase"
 import { IAuthProvider } from "../../../auth/providerContracts/IAuth.provider"
 import { Resources, strings } from "../../../../shared/locals"
 import { IUser } from "../../../../../domain/user/IUser"
-import { URLConstraint } from "../../../../shared/settings/Constraints"
+import { URLConstants } from "../../../../shared/settings/Constants"
 
 export class RegisterUserUseCase extends BaseUseCase {
   constructor(
@@ -39,7 +39,7 @@ export class RegisterUserUseCase extends BaseUseCase {
   async createUser(result: Result, data: IUser) {
     const user = await this.repository.create(data)
 
-    if (user) result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstraint.Users.SignIn.path)
+    if (user) result.setMessage(this.resources.get(strings.USER_CREATED), 201, URLConstants.Users.SignIn.path)
     else result.setError(this.resources.get(strings.USER_ALREADY_EXISTS), 409)
   }
 }

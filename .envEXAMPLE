@@ -1,5 +1,5 @@
 NODE_ENV=development
-SERVER_ROOT=/api
+SERVER_API_PATH=/api
 SERVER_HOST=localhost
 SERVER_PORT=3000
 ORIGINS="http://localhost:3100,http://localhost:3200"

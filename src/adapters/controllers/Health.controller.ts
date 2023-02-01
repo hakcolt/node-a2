@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express"
 import { PongUseCase } from "../../application/modules/health/useCases/pong"
-import { URLConstraint } from "../../application/shared/settings/Constraints"
+import { URLConstants } from "../../application/shared/settings/Constants"
 import { BaseController, IRequest } from "../base/Base.controller"
 
 export class HealthController extends BaseController {
@@ -12,7 +12,7 @@ export class HealthController extends BaseController {
 
 
   override initializeRoutes(router: Router) {
-    const ping = URLConstraint.Health.Ping
+    const ping = URLConstants.Health.Ping
     router[ping.method](ping.path, this.pong)
   }
 }

@@ -45,7 +45,7 @@ export class AppWrapper {
     controllers.forEach((controller) => controller.initializeRoutes(this.router))
     this.router.use(notFoundMiddleware)
     this.router.use(errorHandler)
-    this.app.use(AppSettings.SERVER_ROOT, this.router)
+    this.app.use(AppSettings.SERVER_API_PATH, this.router)
   }
 
   async initializeServices(): Promise<void> {

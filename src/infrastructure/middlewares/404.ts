@@ -13,6 +13,6 @@ export function notFoundMiddleware(request: Request, res: Response, next: NextFu
   res.status(result.statusCode).json({
     ...result,
     method: req.method,
-    path: config.Server.Root + req.path
+    path: config.Server.ApiPath + req.path
   })
 }

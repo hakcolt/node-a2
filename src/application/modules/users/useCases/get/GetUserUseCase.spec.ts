@@ -1,9 +1,9 @@
-import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
+import { LocalUserRepository } from "../../../../../adapters/repositories/local/User.repository"
 import config from "../../../../../infrastructure/config"
 import { createResource, strings } from "../../../../shared/locals"
 import { AppSettings } from "../../../../shared/settings/AppSettings"
 import { GetUserUseCase } from "."
-import { URLConstraint } from "../../../../shared/settings/Constraints"
+import { URLConstants } from "../../../../shared/settings/Constants"
 import { describe, beforeAll, it, expect } from "vitest"
 
 AppSettings.init(config)
@@ -40,7 +40,7 @@ describe("when try refresh access token", () => {
     expect(result.error).toBe(getUserUseCase.resources.get(strings.NEED_AUTHENTICATION))
     expect(result.statusCode).toBe(403)
     expect(result.isSuccess).toBeFalsy()
-    expect(result.next).toBe(URLConstraint.Users.SignIn.address)
+    expect(result.next).toBe(URLConstants.Users.SignIn.path)
   })
 
   it("should return status 403 if token is invalid", async () => {
@@ -53,6 +53,6 @@ describe("when try refresh access token", () => {
     expect(result.error).toBe(getUserUseCase.resources.get(strings.NEED_AUTHENTICATION))
     expect(result.statusCode).toBe(403)
     expect(result.isSuccess).toBeFalsy()
-    expect(result.next).toBe(URLConstraint.Users.SignIn.address)
+    expect(result.next).toBe(URLConstants.Users.SignIn.path)
   })
 })

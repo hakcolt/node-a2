@@ -1,9 +1,9 @@
 import { BaseController, IRequest } from "../base/Base.controller"
 import { RegisterUserUseCase } from "../../application/modules/users/useCases/signUp"
-import { LocalUserRepository } from "../repositories/local/user/User.repository"
+import { LocalUserRepository } from "../repositories/local/User.repository"
 import { AuthProvider } from "../providers/Auth.provider"
 import { NextFunction, Request, Response, Router } from "express"
-import { URLConstraint } from "../../application/shared/settings/Constraints"
+import { URLConstants } from "../../application/shared/settings/Constants"
 import { GetUserUseCase } from "../../application/modules/users/useCases/get"
 
 export class UserController extends BaseController {
@@ -31,10 +31,10 @@ export class UserController extends BaseController {
   }
 
   override initializeRoutes(router: Router) {
-    const signUpUrl = URLConstraint.Users.SignUp
+    const signUpUrl = URLConstants.Users.SignUp
     router[signUpUrl.method](signUpUrl.path, this.signUp)
     
-    const getUserUrl = URLConstraint.Users.Get
+    const getUserUrl = URLConstants.Users.Get
     router[getUserUrl.method](getUserUrl.path, this.getUser)
   }
 }

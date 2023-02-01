@@ -3,13 +3,13 @@ import { IRequest } from "../../adapters/base/Base.controller"
 import { AuthProvider } from "../../adapters/providers/Auth.provider"
 import { ApplicationError } from "../../application/shared/errors/ApplicationError"
 import { strings } from "../../application/shared/locals"
-import { URLConstraint } from "../../application/shared/settings/Constraints"
+import { URLConstants } from "../../application/shared/settings/Constants"
 
 const whiteList = [
-  URLConstraint.Users.SignIn.path,
-  URLConstraint.Users.SignUp.path,
-  URLConstraint.Users.Refresh.path,
-  URLConstraint.Health.Ping.path
+  URLConstants.Users.SignIn.path,
+  URLConstants.Users.SignUp.path,
+  URLConstants.Users.Refresh.path,
+  URLConstants.Health.Ping.path
 ]
 
 export function verifyToken(request: Request, res: Response, next: NextFunction) {

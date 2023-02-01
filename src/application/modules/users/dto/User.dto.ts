@@ -17,6 +17,7 @@ export class UserOutput {
 }
 
 export class UserInput {
+  id: string
   firstName: string
   lastName: string
   email: string
@@ -49,6 +50,7 @@ export class UserDTO {
 
   static fromUser(data: User): UserDTO {
     const userDto = new UserDTO()
+    userDto.id = data.id
     userDto.firstName = data.firstName
     userDto.lastName = data.lastName
     userDto.email = data.email?.toLowerCase()

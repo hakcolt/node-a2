@@ -1,4 +1,4 @@
-export class URLConstraint {
+export class URLConstants {
   static Users = {
     Refresh: { method: "get", path: "/v1/users/refresh" },
     SignUp: { method: "post", path: "/v1/users/signup" },
@@ -6,7 +6,5 @@ export class URLConstraint {
     Get: { method: "get", path: "/v1/users/get" }
   }
 
-  static Health = {
-    Ping: { method: "get", path: "/v1/ping" }
-  }
+  static Health = { Ping: { method: "get", path: "/ping" } }
 }

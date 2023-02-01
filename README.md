@@ -255,15 +255,13 @@ initializeRoutes(router: Router): void {
 /*...*/
 ```
 
-## Using with another web server framework
+## Using Node A2
 
-You must implement the configuration made with **ExpressJs** with the framework of your choice and **install** all the **dependencies** and **devDependencies** for your framework, You must also modify the **Server** module, **Middleware** in **infrastructure** directory and the **BaseController** and **Controllers** in adapters directory.
+You can implement the configuration made with **ExpressJs** with the framework of your choice and **install** all the **dependencies** and **devDependencies** for your framework, You must also modify the **Server** module, **middleware** in **infrastructure** directory and the **BaseController** and **Controllers** in adapters directory.
 
 And then, continue with the step **installation**.
 
 ## UseCase
-
-Os casos de uso devem estar em application/modules e devem retornar um objeto Result. Em seguida, deve-se importa-los para serem usados nos controllers, como no exemplo a seguir:
 
 The **Use Cases** must be in **application/modules** and must return a **Result** object.  Once ready for use, we must import them to **controllers** passing the **contracts** as constructor's parameters, as in the following example:
 
@@ -302,12 +300,12 @@ Go to project root directory, create a **.env file** and inside it copy and past
 
 ```text
 NODE_ENV=development
-SERVER_ROOT=/api
+SERVER_API_PATH=/api
 SERVER_HOST=localhost
 SERVER_PORT=3000
 ORIGINS="http://localhost:3100,http://localhost:3200"
 JWT_LONG_SESSION_KEY=defineYourKey
-JWT_LONG_SESSION_TIME_IN_SECONDS=604800 # 7 DAYS IN SECONDS
+JWT_LONG_SESSION_TIME_IN_SECONDS=2592000 # 30 DAYS IN SECONDS
 JWT_REFRESH_SESSION_KEY=defineOtherKey
 JWT_REFRESH_SESSION_TIME_IN_SECONDS=21600 # 6 HOURS IN SECONDS
 ```
@@ -339,28 +337,6 @@ npm run build
 node dist/index
 ```
 
-### Docker Compose
-
-The first two steps are for updating the project, but you can skip to step 3 if you prefer.
-
-First, we must install the dependencies, run: 
-
-```shell
-npm install
-```
-
-Second, we must update the dependencies, run: 
-
-```shell
-npm update
-```
-
-Third, build the app with the following command:
-
-```shell
-docker-compose up -d --build
-```
-
 ## Run Test
 
 - The end to end tests are implemented for each use case in its respective folder. 
@@ -381,16 +357,6 @@ npm run test
 ## Application debugger
 
 If you are using VS Code the easiest way to debug the solution is to follow these instructions:
-
-### The short way is the next:
-
-Press **Ctrl + J** keys and later **click in down arrow** to add other terminal and select **JavaScript Debug Terminal** and later 
-
-```console
-$ npm run dev
-```
-
-### The complicated way is:
 
 First go to **package.json** file.
 
@@ -417,7 +383,6 @@ Serve Running on localhost:3000/api
 To stop the debug just press **Ctrl C** and close the console that was opened to run the debug script.
 
 This method will allow you to develop and have the solution be attentive to your changes (hot reload) without the need to restart the service, VS Code does it for you automatically.
-
 
 ## Build for production
 

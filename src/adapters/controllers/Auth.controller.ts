@@ -1,10 +1,10 @@
 import { BaseController, IRequest } from "../base/Base.controller"
-import { LocalUserRepository } from "../repositories/local/user/User.repository"
+import { LocalUserRepository } from "../repositories/local/User.repository"
 import { LoginUserUseCase } from "../../application/modules/auth/useCases/signIn"
 import { AuthProvider } from "../providers/Auth.provider"
 import { RefreshTokenUseCase } from "../../application/modules/auth/useCases/refresh"
 import { NextFunction, Request, Response, Router } from "express"
-import { URLConstraint } from "../../application/shared/settings/Constraints"
+import { URLConstants } from "../../application/shared/settings/Constants"
 
 export class AuthController extends BaseController {
 
@@ -33,10 +33,10 @@ export class AuthController extends BaseController {
   }
 
   override initializeRoutes(router: Router) {
-    const refreshUrl = URLConstraint.Users.Refresh
+    const refreshUrl = URLConstants.Users.Refresh
     router[refreshUrl.method](refreshUrl.path, this.refresh)
     
-    const signInUrl = URLConstraint.Users.SignIn
+    const signInUrl = URLConstants.Users.SignIn
     router[signInUrl.method](signInUrl.path, this.signIn)
   }
 }

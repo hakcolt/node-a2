@@ -1,9 +1,9 @@
 import configs from "../../../../../infrastructure/config"
 import { beforeAll, describe, expect, it } from "vitest"
 import { AuthProvider } from "../../../../../adapters/providers/Auth.provider"
-import { LocalUserRepository } from "../../../../../adapters/repositories/local/user/User.repository"
+import { LocalUserRepository } from "../../../../../adapters/repositories/local/User.repository"
 import { AppSettings } from "../../../../shared/settings/AppSettings"
-import { URLConstraint } from "../../../../shared/settings/Constraints"
+import { URLConstants } from "../../../../shared/settings/Constants"
 import { ResultData } from "../../../../shared/useCases/BaseUseCase"
 
 import { LoginUserUseCase } from "."
@@ -37,7 +37,7 @@ describe("when try to login user with email and password", () => {
     expect(result as ResultData<UserTokenDTO>).toHaveProperty(["data", "accessToken", "token"])
     expect(result as ResultData<UserTokenDTO>).toHaveProperty(["data", "user", "id"])
     expect(result as ResultData<UserTokenDTO>).toHaveProperty(["cookie", "value"])
-    expect(result.next).toBe(URLConstraint.Users.Refresh.address)
+    expect(result.next).toBe(URLConstants.Users.Refresh.path)
   })
 
   it("should return status 400 if email is missing", async () => {
